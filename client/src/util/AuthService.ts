@@ -16,12 +16,8 @@ export interface IAuthService {
 export const AuthService : IAuthService = {
 
   isAuthenticated: async () => {
-
     const res = await Auth.currentUserInfo();
-  
-    console.log(res);
     return res !== null;
-  
   },
 
   configure: () => {

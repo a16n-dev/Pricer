@@ -1,6 +1,7 @@
 import { Auth } from 'aws-amplify';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
 import { Alert, Button, Card, CardBody, CardTitle, Col, Container, FormGroup, Label } from 'reactstrap';
 import { AuthService } from '../../util/AuthService';
 
@@ -9,30 +10,25 @@ interface formData {
   password: string;
 }
 
-
-interface LoginProps {
-  setAuthState: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const Login: React.FC<LoginProps> = ({setAuthState}) => {
+const Login: React.FC = () => {
   const { register, handleSubmit, errors } = useForm();
   const [ authError, setAuthError ] = useState<boolean>(false);
+  const history = useHistory();
 
   const onSubmit = ({username, password} : formData) => {
     setAuthError(false);
     AuthService.signIn(username, password).then((user:any) => {
-      console.log(user);
+
+      // TODO: Move this logic into AuthService
       if(user.challengeName === 'NEW_PASSWORD_REQUIRED'){
-        console.log('New password required');
         Auth.completeNewPassword(
           user,
           'Temp54321',
         );
       }
-      setAuthState(true);
+      history.push('/');
     }).catch((err) => {
       setAuthError(true);
-      console.log(err);
     });;
   };
 

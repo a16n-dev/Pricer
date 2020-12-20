@@ -1,25 +1,23 @@
-import { Auth } from 'aws-amplify';
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { Container } from 'reactstrap';
-
 import Navbar from './components/Navbar';
-import Login from './pages/auth/Login';
+import ProtectedRoutes from './routes/ProtectedRoutes';
+import PublicRoutes from './routes/PublicRoutes';
 import { AuthService } from './util/AuthService';
 import { LoggerService } from './util/LoggerService';
 
 
-const App = () => {
-  
-  console.log(Auth);
 
-  // TODO: Move this into redux
+const App = () => {
+
+  // TODO: Move this state into redux
   const [ authState, setAuthState ] = useState<boolean>(false);
 
   const [ loading, setLoading ] = useState<boolean>(true);
 
   useEffect(() => {
     AuthService.isAuthenticated().then((res) => {
-      console.log(res);
       setAuthState(res);
       setLoading(false);
     }).catch((err) => {
@@ -30,17 +28,18 @@ const App = () => {
 
 
   return (
-    <Container>
-      {!loading && (authState ?
-        <>
-          <Navbar/>
-          <h1>You are logged in!</h1>
-        </>
-        :
-        <Login setAuthState={setAuthState}/>
-      )}
-      
-    </Container>
+    <Router>
+      <Container>
+        {!loading && (authState ?
+          <>
+            <Navbar/>
+            <ProtectedRoutes/>
+          </>
+          :
+          <PublicRoutes/>)
+        }
+      </Container>
+    </Router>
   );
 };
 

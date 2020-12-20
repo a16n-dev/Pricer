@@ -7,7 +7,7 @@ interface CompleteSignUpModalProps {
 }
 
 const CompleteSignUpModal: React.FC<CompleteSignUpModalProps> = ({hide}) => {
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit } = useForm();
 
     
   const onSubmit = () => {
