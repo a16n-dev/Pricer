@@ -1,10 +1,11 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Button, Nav, NavItem, NavLink } from 'reactstrap';
-import { AuthService } from '../util/AuthService';
+import { logout } from '../redux/actions/Auth';
 
 const Navbar: React.FC = () => {
-  const history = useHistory();
+
+  const dispatch = useDispatch();
   return(
 
     <>
@@ -14,8 +15,7 @@ const Navbar: React.FC = () => {
         </NavItem>
         <NavItem>
           <Button outline color={'primary'} onClick={() => {
-            AuthService.signOut();
-            history.push('/login');
+            dispatch(logout());
           }}>Sign Out</Button>
         </NavItem>
       </Nav>

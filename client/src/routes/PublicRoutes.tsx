@@ -8,6 +8,7 @@ const publicRouteMap : routeMap = {
     {
       path: '/login',
       Component: LazyLogin,
+      exact: true,
     },
   ],
 

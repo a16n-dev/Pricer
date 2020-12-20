@@ -1,8 +1,9 @@
 import { Auth } from 'aws-amplify';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Alert, Button, Card, CardBody, CardTitle, Col, Container, FormGroup, Label } from 'reactstrap';
+import { login } from '../../redux/actions/Auth';
 import { AuthService } from '../../util/AuthService';
 
 interface formData {
@@ -11,9 +12,9 @@ interface formData {
 }
 
 const Login: React.FC = () => {
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit } = useForm();
   const [ authError, setAuthError ] = useState<boolean>(false);
-  const history = useHistory();
+  const dispatch = useDispatch();
 
   const onSubmit = ({username, password} : formData) => {
     setAuthError(false);
@@ -26,7 +27,7 @@ const Login: React.FC = () => {
           'Temp54321',
         );
       }
-      history.push('/');
+      dispatch(login());
     }).catch((err) => {
       setAuthError(true);
     });;

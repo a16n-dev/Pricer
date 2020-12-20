@@ -4,12 +4,15 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthService } from './util/AuthService';
-
+import Store from './redux/store';
+import { Provider } from 'react-redux';
 AuthService.configure();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={Store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root'),
 );
