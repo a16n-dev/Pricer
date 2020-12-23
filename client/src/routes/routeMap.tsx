@@ -8,7 +8,7 @@ export interface routeMap {
     redirects?: Array<redirect>;
 }
 
- interface route {
+interface route {
     path: string;
     exact?: boolean;
     Component: React.ComponentType;

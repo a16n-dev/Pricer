@@ -1,22 +1,16 @@
-import React from 'react';
+import coreRouteMap from './protected/CoreRoutes';
+import productRouteMap from './protected/ProductRoutes';
 import { renderRoutes, routeMap } from './routeMap';
-
-const LazyDashboard = React.lazy(() => import('../pages/dashboard/Dashboard'));
 
 const protectedRouteMap : routeMap = {
   routes: [
-    {
-      path: '/',
-      Component: LazyDashboard,
-      exact: true,
-    },
+    ...(coreRouteMap.routes || []),
+    ...(productRouteMap.routes || []),
   ],
 
   redirects: [
-    {
-      from :'/*',
-      to: '/',
-    },
+    ...(coreRouteMap.redirects || []),
+    ...(productRouteMap.redirects || []),
   ],
 };
 

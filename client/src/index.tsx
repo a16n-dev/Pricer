@@ -6,12 +6,15 @@ import reportWebVitals from './reportWebVitals';
 import { AuthService } from './util/AuthService';
 import Store from './redux/store';
 import { Provider } from 'react-redux';
+import { SnackbarProvider } from 'notistack';
 AuthService.configure();
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={Store}>
-      <App />
+      <SnackbarProvider maxSnack={3}>
+        <App />
+      </SnackbarProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root'),
