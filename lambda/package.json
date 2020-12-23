@@ -1,0 +1,29 @@
+{
+  "name": "lambda",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "serverless invoke local -f getProducts -l",
+    "dev": "serverless offline start",
+    "deploy": "serverless deploy",
+    "remove": "serverless remove --stage dev --region ap-southeast-2",
+    "build": "serverless package"
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.1.14",
+    "@types/aws-lambda": "^8.10.67",
+    "aws-sdk": "^2.815.0",
+    "serverless": "2.5.0",
+    "serverless-dynamodb-local": "^0.2.39",
+    "serverless-functions-base-path": "^1.0.32",
+    "serverless-offline": "^6.8.0",
+    "serverless-openapi-documentation": "^0.4.0",
+    "serverless-plugin-typescript": "^1.1.9",
+    "typescript": "^4.1.3",
+    "typescript-json-schema": "^0.45.1"
+  },
+  "dependencies": {
+    "uuid": "^8.3.2"
+  }
+}

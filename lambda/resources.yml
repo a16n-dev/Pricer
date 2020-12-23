@@ -1,0 +1,26 @@
+Resources:
+  productsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: PRODUCTS
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: productId
+          AttributeType: S
+        - AttributeName: userId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+        - AttributeName: productId
+          KeyType: RANGE
+  apiAuthorizer:
+    Type: AWS::ApiGateway::Authorizer
+    Properties: 
+      IdentitySource: method.request.header.authorization
+      Name: PricerAuthorizer
+      ProviderARNs: 
+        - arn:aws:cognito-idp:ap-southeast-2:596671070725:userpool/ap-southeast-2_zW0860bI1
+      RestApiId:     
+        Ref: ApiGatewayRestApi
+      Type: COGNITO_USER_POOLS
