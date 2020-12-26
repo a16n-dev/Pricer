@@ -1,4 +1,4 @@
-export default interface CreateProductResponse {
+export default interface ProductResponse {
     productId: string;
     name: string;
     brand?: string;

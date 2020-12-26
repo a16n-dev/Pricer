@@ -4,6 +4,7 @@ import { APIGatewayProxyHandler } from "aws-lambda";
 import * as AWS from 'aws-sdk'
 import { v4 as uuidv4 } from 'uuid';
 import CreateProductRequest from "../dto/products/CreateProductRequest";
+import {cognitoAuth, httpGET, httpPOST} from '../../slsa/annontations'
 
 AWS.config.update({ region: "ap-southeast-2" });
 
@@ -16,12 +17,19 @@ const options =  {
 
 var docClient = new AWS.DynamoDB.DocumentClient(offline ? options : {});
 
+httpGET('products')
+cognitoAuth('apiAuthorizer')
 export const getProducts : APIGatewayProxyHandler  = (event, context, callback) => {
 
-  const userId = offline? 1 : context.identity?.cognitoIdentityId;
+  let userId = context.identity?.cognitoIdentityId;
 
   if(!userId){
-    callback('No cognitoIdentityId found')
+    if(offline){
+      userId = '1';
+    } else {
+      callback('No cognitoIdentityId found')
+    }
+
   }
 
   docClient.query({
@@ -54,13 +62,18 @@ export const getProducts : APIGatewayProxyHandler  = (event, context, callback) 
   });
 }
 
+httpPOST('products/new')
+cognitoAuth('apiAuthorizer')
 export const addProduct : APIGatewayProxyHandler = (event, context, callback) => {
 
   const data: CreateProductRequest = JSON.parse(event.body || '{}')
-  const userId = offline? 1 : context.identity?.cognitoIdentityId;
+  let userId = context.identity?.cognitoIdentityId;
 
   if(!userId){
-    callback('No cognitoIdentityId found')
+    if(offline && false){
+    } else {
+      callback('No cognitoIdentityId found')
+    }
   }
 
   const Item = {

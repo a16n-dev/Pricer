@@ -1,31 +1,27 @@
 service: pricer-backend
-
-frameworkVersion: "2"
-
+frameworkVersion: '2'
 plugins:
   - serverless-functions-base-path
   - serverless-dynamodb-local
   - serverless-plugin-typescript
   - serverless-offline
   - serverless-openapi-documentation
-
 custom:
-  documentation: ${file(docs/serverless.doc.yml):documentation}
-  functionsBasePath: src/handlers
+  documentation: '${file(docs/serverless.doc.yml):documentation}'
+  serverless-offline:
+    httpPort: 4000
+  functionsBasePath: out/src/handlers
   dynamodb:
     start:
       migrate: true
     stages:
       - dev
-
 provider:
   name: aws
   runtime: nodejs12.x
   stage: dev
   region: ap-southeast-2
-
-resources: ${file(resources.yml)}
-
+resources: '${file(resources.yml)}'
 functions:
   getProducts:
     handler: productHandler.getProducts
@@ -33,25 +29,17 @@ functions:
       - http:
           path: products
           method: get
-          authorizer: 
-            type: COGNITO_USER_POOLS 
+          authorizer:
+            type: COGNITO_USER_POOLS
             authorizerId:
               Ref: apiAuthorizer
-          documentation:
-            summary: "Create a new product"
-            description: "Creates a new product for the current user"
-            methodResponses: 
-              - statusCode: 200
   addProduct:
     handler: productHandler.addProduct
     events:
       - http:
-          path: products/add
+          path: products/new
           method: post
-          authorizer: 
-            type: COGNITO_USER_POOLS 
+          authorizer:
+            type: COGNITO_USER_POOLS
             authorizerId:
               Ref: apiAuthorizer
-          documentation:
-            summary: "Create a new product"
-            description: "Creates a new product for the current user"
