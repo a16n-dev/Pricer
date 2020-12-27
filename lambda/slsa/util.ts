@@ -1,69 +1,95 @@
 import * as fs from 'fs'
 import path from 'path'
 import ts from 'typescript';
+import { ComposedFunction } from './doc';
 
-export const walk = (dir: string, done: (err: Error, results?: Array<string>) => void) => {
+export const walk = (dir: string): Array<string> => {
   var results: Array<string> = [];
 
-  fs.readdir(dir, function (err: Error, list: string[]) {
+  let list: string[];
 
-    if (err) return done(err);
+  try {
+    list = fs.readdirSync(dir)
+  } catch (error) {
 
-    var pending = list.length;
+  }
 
-    if (!pending) {
-      return done(null, results)
-    };
-    list.forEach(function (file: string) {
-      file = path.resolve(dir, file);
-      fs.stat(file, function (err, stat) {
-        if (stat && stat.isDirectory()) {
-          walk(file, function (err, res) {
-            results = results.concat(res);
-            if (!--pending) done(null, results);
-          });
-        } else {
-          results.push(file);
-          if (!--pending) done(null, results);
-        }
-      });
-    });
+  list.forEach((file: string) => {
+
+    file = path.resolve(dir, file);
+
+    let stat: fs.Stats
+
+    try {
+      stat = fs.statSync(file)
+    } catch (error) {
+
+    }
+
+    if (stat && stat.isDirectory()) {
+      const res = walk(file)
+      results = results.concat(res);
+    } else {
+      results.push(file);
+    }
+
   });
-};
+  return results;
+}
 
-export const parseAnnotation = (node: ts.CallExpression, event: any) => {
 
-  switch (node.expression.getText()) {
+
+export const parseAnnotation = (node: ts.CallExpression): ComposedFunction => {
+
+  let res: ComposedFunction = {}
+
+  const name = node.expression.getText()
+
+  if (name.includes('http')) {
+    res.path = `${node.arguments[0].getText().replace(/['"]+/g, '')}`
+  }
+
+  switch (name) {
     case "httpGET":
-      return {
-        ...event,
-        http: {
-          path: `${node.arguments[0].getText().replace(/['"]+/g, '')}`,
-          method: 'get'
-        }
-      }
-
+      res.method = 'get'
+      break;
     case "httpPOST":
-      return {
-        ...event,
-        http: {
-          path: `${node.arguments[0].getText().replace(/['"]+/g, '')}`,
-          method: 'post'
-        }
-      }
+      res.method = 'post'
+      break;
+    case "httpDELETE":
+      res.method = 'delete'
+      break;
+    case "httpPATCH":
+      res.method = 'patch'
+      break;
 
     case "cognitoAuth":
-      return {
-        ...event,
-        http: {
-          ...event?.http,
-          authorizer: {
-            type: 'COGNITO_USER_POOLS',
-            authorizerId: {
-              Ref: `${node.arguments[0].getText().replace(/['"]+/g, '')}`
-            }
-          }
-        }
+      res.authorizer = {
+        type: 'COGNITO_USER_POOLS',
+        ref: `${node.arguments[0].getText().replace(/['"]+/g, '')}`
       }
+      break;
   }
+
+  return res
+}
+
+export const parseGlobalAnnotation = (node: ts.CallExpression): ComposedFunction => {
+
+  let res: ComposedFunction = {}
+
+  const name = node.expression.getText()
+
+  switch (name) {
+    case 'globalCognitoAuth':
+      res.authorizer = {
+        type: 'COGNITO_USER_POOLS',
+        ref: `${node.arguments[0].getText().replace(/['"]+/g, '')}`
+      }
+      break;
+  }
+
+  return res;
+
+
 }

@@ -1,0 +1,109 @@
+openapi: 3.0.0
+info:
+  title: pricer-backend
+  version: 1.0.0
+paths:
+  /products:
+    get:
+      operationId: getProducts
+      responses:
+        '200':
+          description: Status 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProducts200Response'
+        '400':
+          description: Status 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProducts400Response'
+  /products/new:
+    post:
+      operationId: addProduct
+      responses:
+        '201':
+          description: Status 201 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          description: Status 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AWSError'
+components:
+  schemas:
+    GetProducts400Response:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+    GetProducts200Response:
+      type: object
+      properties: {}
+      required: []
+    AWSError:
+      type: object
+      properties:
+        name:
+          type: string
+        message:
+          type: string
+        stack:
+          type: string
+        code:
+          type: string
+        retryable:
+          type: boolean
+        statusCode:
+          type: number
+        hostname:
+          type: string
+        region:
+          type: string
+        retryDelay:
+          type: number
+        requestId:
+          type: string
+        extendedRequestId:
+          type: string
+        cfId:
+          type: string
+      required:
+        - name
+        - message
+        - code
+    ProductResponse:
+      type: object
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        brand:
+          type: string
+        description:
+          type: string
+        cost:
+          type: number
+        quantity:
+          type: number
+        units:
+          type: string
+      required:
+        - productId
+        - name
+        - cost
+        - quantity
+        - units
+servers:
+  - url: 'http://localhost:4000/dev'
+    description: Local Development Server
+  - url: 'https://6dz7rgn3e0.execute-api.ap-southeast-2.amazonaws.com/dev'
+    description: Production server
