@@ -6,4 +6,6 @@ export interface Product {
     cost: number;
     quantity: number;
     units: string;
+    dateCreated: Date;
+    dateModified: Date;
 }

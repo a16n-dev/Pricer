@@ -33,8 +33,12 @@ export const createProduct = createAsyncThunk(
     // Do validation here
     const product: Product = {
       id: uuidv4(),
+      dateCreated: new Date(),
+      dateModified: new Date(),
       ...productData,
     };
+
+    console.log(product);
 
     return product;
 
@@ -60,6 +64,7 @@ const ProductSlice = createSlice<ProductState, SliceCaseReducers<ProductState>>(
     builder.addCase(createProduct.fulfilled, (state, {payload}) => {
       state.loading = false;
       state.products[payload.id] = payload;
+      state.count = Object.keys(state.products).length;
     });
 
     builder.addCase(createProduct.rejected, (state, action) => {

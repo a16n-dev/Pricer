@@ -1,4 +1,5 @@
 // HOC to inject passed component with initial state.
+// The component gives a selector prop that indicates what data should be selected from the state.
 
 export interface initialStateProps<T, > {
     initialState: T

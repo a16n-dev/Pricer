@@ -5,6 +5,8 @@ import { useHistory } from 'react-router-dom';
 import { Col, Container, Row } from 'reactstrap';
 import withConfirmation, { confirmationProps } from '../../components/HOC/withConfirmation';
 import withInitialState, { initialStateProps } from '../../components/HOC/withInitialState';
+import { createProduct } from '../../redux/ProductSlice';
+import { useAppDispatch } from '../../redux/store';
 import ProductForm from './ProductForm';
 
 interface createProductProps {
@@ -22,8 +24,9 @@ const CreateProduct: React.FC<
  > = ({confirm, initialState}) => {
    const { enqueueSnackbar } = useSnackbar();
    const history = useHistory();
+   const dispatch = useAppDispatch();
 
-   const onSubmit = ({
+   const onSubmit = async ({
      productName,
      productPrice,
      productQuantity,
@@ -31,12 +34,24 @@ const CreateProduct: React.FC<
      productBrand,
      productDescription,
    }: FieldValues) => {
+     const res = await dispatch(createProduct({
+       name: productName,
+       cost: productPrice,
+       description: productDescription,
+       brand: productBrand,
+       quantity: productQuantity,
+       units: productUnit.value,
+     }));
+
+     if(createProduct.fulfilled.match(res)){
+       enqueueSnackbar(`Created ${productName}`, {
+         variant:'success',
+       });
+       history.push('/products');
+     }
+
     
 
-     enqueueSnackbar(`Created ${productName}`, {
-       variant:'success',
-
-     });
    };
 
    const onCancel = () => {
