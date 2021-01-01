@@ -1,14 +1,13 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { Button, Nav, NavItem, NavLink } from 'reactstrap';
-import { logout } from '../redux/actions/Auth';
+import { logout } from '../redux/AuthSlice';
 
 const Navbar: React.FC = () => {
 
   const dispatch = useDispatch();
+  
   return(
-
     <>
       <Nav className={'my-3'}>
         <NavItem className={'mr-4'}>

@@ -3,11 +3,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { AuthService } from './util/AuthService';
 import Store from './redux/store';
 import { Provider } from 'react-redux';
 import { SnackbarProvider } from 'notistack';
-AuthService.configure();
+import Amplify from 'aws-amplify';
+import awsconfig from './aws-exports';
+
+Amplify.configure(awsconfig);
 
 ReactDOM.render(
   <React.StrictMode>

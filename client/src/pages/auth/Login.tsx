@@ -2,9 +2,19 @@ import { Auth } from 'aws-amplify';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { Alert, Button, Card, CardBody, CardTitle, Col, Container, FormGroup, Label } from 'reactstrap';
-import { login } from '../../redux/actions/Auth';
-import { AuthService } from '../../util/AuthService';
+import {
+  Alert,
+  Button,
+  Card,
+  CardBody,
+  CardTitle,
+  Col,
+  Container,
+  FormGroup,
+  Label,
+} from 'reactstrap';
+import { login } from '../../redux/AuthSlice';
+import { useAppDispatch } from '../../redux/store';
 
 interface formData {
   username: string;
@@ -12,25 +22,15 @@ interface formData {
 }
 
 const Login: React.FC = () => {
-  const { register, handleSubmit } = useForm();
-  const [ authError, setAuthError ] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const { register, handleSubmit, errors } = useForm();
+  const dispatch = useAppDispatch();
 
-  const onSubmit = ({username, password} : formData) => {
-    setAuthError(false);
-    AuthService.signIn(username, password).then((user:any) => {
+  const onSubmit = async ({username, password} : formData) => {
 
-      // TODO: Move this logic into AuthService
-      if(user.challengeName === 'NEW_PASSWORD_REQUIRED'){
-        Auth.completeNewPassword(
-          user,
-          'Temp54321',
-        );
-      }
-      dispatch(login());
-    }).catch((err) => {
-      setAuthError(true);
-    });;
+    const res = await dispatch(login({username, password}));
+    if(login.rejected.match(res)){
+      console.log(res.error.message);
+    }
   };
 
   return (
@@ -60,7 +60,7 @@ const Login: React.FC = () => {
                 />
               </FormGroup>
               <FormGroup>
-                {authError && <Alert color='danger'>Invalid username or password</Alert>}
+                {true && <Alert color='danger'>Invalid username or password</Alert>}
               </FormGroup>
               <FormGroup>
                 <Button type="submit" color={'primary'} block>Login</Button>

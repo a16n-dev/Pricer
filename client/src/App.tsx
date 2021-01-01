@@ -1,37 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import Navbar from './components/Navbar';
+import { AuthState, hydrateAuth } from './redux/AuthSlice';
+import { RootState, useAppDispatch } from './redux/store';
 import ProtectedRoutes from './routes/ProtectedRoutes';
 import PublicRoutes from './routes/PublicRoutes';
-import { AuthService } from './util/AuthService';
-import { LoggerService } from './util/LoggerService';
-import { useDispatch, useSelector } from 'react-redux';
-import { rootState } from './redux/types';
-import { LOGIN } from './redux/constants/actionTypes';
 
 const App = () => {
 
-  // TODO: Move this state into redux
-  const authState = useSelector((state : rootState) => state.isAuthenticated);
-  const dispatch = useDispatch();
+  const {
+    resolvingAuthState,
+    isAuthenticated,
+  } = useSelector<RootState, AuthState>((state) => state.auth);
 
-  const [ loading, setLoading ] = useState<boolean>(true);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    AuthService.isAuthenticated().then((res) => {
-      dispatch({ type: LOGIN });
-      setLoading(false);
-    }).catch((err) => {
-      LoggerService.log(err);
-      setLoading(false);
-    });
+    dispatch(hydrateAuth());
   }, [ dispatch ]);
 
   return (
     <Router>
       <Container>
-        {!loading && (authState ?
+        {!resolvingAuthState && (isAuthenticated ?
           <>
             <Navbar/>
             <ProtectedRoutes/>

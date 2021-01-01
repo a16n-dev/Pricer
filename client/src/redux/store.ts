@@ -1,22 +1,17 @@
-import { createStore, StoreEnhancer } from 'redux';
-import rootReducer from './reducers/index';
-import { rootState } from './types';
+import { configureStore } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
+import AuthSlice from './AuthSlice';
+import ProductSlice from './ProductSlice';
 
-type WindowWithDevTools = Window & {
-    __REDUX_DEVTOOLS_EXTENSION__: () => StoreEnhancer<unknown, {}>
-   }
-   
-const isReduxDevtoolsExtenstionExist =
-   (arg: Window | WindowWithDevTools):
-     arg is WindowWithDevTools  => '__REDUX_DEVTOOLS_EXTENSION__' in arg;
+const store = configureStore({
+  reducer: {
+    products: ProductSlice,
+    auth: AuthSlice,
+  },
+});
 
-export const initialState : rootState = {
-  isAuthenticated: false,
-};
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
+export const useAppDispatch = () => useDispatch<AppDispatch>();
 
-export default createStore(
-  rootReducer,
-  initialState,
-  isReduxDevtoolsExtenstionExist(window) ?
-    window.__REDUX_DEVTOOLS_EXTENSION__() : undefined,
-);
+export default store;

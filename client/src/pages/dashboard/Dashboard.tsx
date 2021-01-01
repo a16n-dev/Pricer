@@ -49,8 +49,12 @@ const Dashboard: React.FC = () => (
       <h2>Products <span className={'ml-3 text-primary'}>304</span></h2>
     </Row>
     <Row className={'mt-2'}>
-      <Link to={'/products'}><Button color={'primary'}>View all Products</Button></Link>
-      <Button color={'primary'} outline className={'ml-4'}>Add new Product</Button>
+      <Link to={'/products'}>
+        <Button color={'primary'}>View all Products</Button>
+      </Link>
+      <Link to={'/products/new'}>
+        <Button color={'primary'} outline className={'ml-4'}>Add new Product</Button>
+      </Link>
     </Row>
     <Row className={'mt-2'}>
       <Card className={'w-100'}>

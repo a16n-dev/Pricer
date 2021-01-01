@@ -12,31 +12,33 @@ interface modalState {
     action: () => void;
 }
 
-const withConfirmation = (Component: React.ComponentType<confirmationProps>) => () => {
-  const [ modal, setModal ] = useState<boolean>(false);
-  const [ modalState, setModalState ] = useState<modalState>({
-    message: '',
-    action: () => {},
-  });
-    
-  const renderModal = (message: string, action: () => void) => {
-    setModalState({
-      message,
-      action,
+const withConfirmation = <ComponentProps, >(
+  Component: React.ComponentType<confirmationProps & ComponentProps>,
+) => (props: ComponentProps) => {
+    const [ modal, setModal ] = useState<boolean>(false);
+    const [ modalState, setModalState ] = useState<modalState>({
+      message: '',
+      action: () => {},
     });
-    setModal(true);
-  };
+    
+    const renderModal = (message: string, action: () => void) => {
+      setModalState({
+        message,
+        action,
+      });
+      setModal(true);
+    };
 
-  return(
-    <>
-      <ConfirmationModal
-        modal={modal}
-        closeModal={setModal}
-        message={modalState.message}
-        action={modalState.action}></ConfirmationModal>
-      <Component confirm={renderModal}/>
-    </>
-  );
-};
+    return(
+      <>
+        <ConfirmationModal
+          modal={modal}
+          closeModal={setModal}
+          message={modalState.message}
+          action={modalState.action}></ConfirmationModal>
+        <Component {...props} confirm={renderModal}/>
+      </>
+    );
+  };
 
 export default withConfirmation;

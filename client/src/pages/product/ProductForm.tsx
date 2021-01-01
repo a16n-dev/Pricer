@@ -7,6 +7,7 @@ interface productFormProps {
     onSubmit: (data: FieldValues) => void;
     onCancel: () => void;
     initialState?: productFormData;
+    units: Array<{value: string; label: string}>
 }
 
 interface productFormData {
@@ -18,7 +19,7 @@ interface productFormData {
     brand?: string;
 }
 
-const ProductForm: React.FC<productFormProps> = ({onSubmit, onCancel}) => {
+const ProductForm: React.FC<productFormProps> = ({onSubmit, onCancel, units}) => {
 
   const { register, handleSubmit, errors, control } = useForm();
 
@@ -28,11 +29,6 @@ const ProductForm: React.FC<productFormProps> = ({onSubmit, onCancel}) => {
     quantity: 300,
     unit: 'gram',
   };
-
-  const units = [
-    {value: 'g', label: 'Grams (g)'},
-    {value: 'kg', label: 'Kilograms (kg)'},
-  ];
 
   const preSubmit = (data : FieldValues) => {
     Object.keys(data).forEach(key => {

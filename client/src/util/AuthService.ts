@@ -11,6 +11,7 @@ export interface IAuthService {
     configure: () => void;
     signIn: (username: string, password: string) => Promise<void>;
     signOut: () => void;
+    token: () => Promise<string>;
 }
 
 export const AuthService : IAuthService = {
@@ -21,11 +22,15 @@ export const AuthService : IAuthService = {
   },
 
   configure: () => {
-    Amplify.configure(awsconfig);
+    
   },
 
-  signIn: (username, password) => Auth.signIn(username, password),
+  signIn: async (username, password) => Auth.signIn(username, password),
 
   signOut: () => Auth.signOut(),
 
+  token: async () => {
+    const res = await Auth.currentSession();
+    return res.getIdToken().getJwtToken();
+  },
 };
