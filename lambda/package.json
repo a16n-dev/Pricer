@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "serverless offline start",
-    "deploy": "serverless deploy > .deployinfo",
+    "deploy": "serverless deploy",
     "remove": "serverless remove --stage dev --region ap-southeast-2",
     "build": "serverless package"
   },
