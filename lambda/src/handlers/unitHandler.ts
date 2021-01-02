@@ -4,6 +4,7 @@ import { APIGatewayProxyHandler } from "aws-lambda";
 import * as AWS from 'aws-sdk'
 import { v4 as uuidv4 } from 'uuid';
 import { Product, ProductData } from "../models/Product";
+import { Unit, UnitData } from "../models/Unit";
 
 AWS.config.update({ region: "ap-southeast-2" });
 
@@ -16,7 +17,7 @@ const options =  {
 
 var docClient = new AWS.DynamoDB.DocumentClient(offline ? options : {});
 
-export const getProducts : APIGatewayProxyHandler  = (event, context, callback) => {
+export const getUnits : APIGatewayProxyHandler  = (event, context, callback) => {
 
   let userId = context.identity?.cognitoIdentityId;
 
@@ -33,7 +34,7 @@ export const getProducts : APIGatewayProxyHandler  = (event, context, callback) 
       ':u': `${userId}`,
      },
    KeyConditionExpression: 'userId = :u',
-   TableName: 'PRODUCTS'
+   TableName: 'UNITS'
   }, (err, data) => {
     if (err) {
         callback (null, {
@@ -57,9 +58,9 @@ export const getProducts : APIGatewayProxyHandler  = (event, context, callback) 
 }
 
 
-export const addProduct : APIGatewayProxyHandler = (event, context, callback) => {
+export const addUnit : APIGatewayProxyHandler = (event, context, callback) => {
 
-  const data: ProductData = JSON.parse(event.body || '{}')
+  const data: UnitData = JSON.parse(event.body || '{}')
   let userId = context.identity?.cognitoIdentityId;
 
   if(!userId){
@@ -70,7 +71,7 @@ export const addProduct : APIGatewayProxyHandler = (event, context, callback) =>
     }
   }
 
-  const Item: Product = {
+  const Item: Unit = {
     id: `${uuidv4()}`,
     userId: `${userId}`,
     dateCreated: Date.now(),
@@ -79,7 +80,7 @@ export const addProduct : APIGatewayProxyHandler = (event, context, callback) =>
   }
 
   docClient.put({
-    TableName: 'PRODUCTS',
+    TableName: 'UNITS',
     Item
   }, (err, data) => {
     if(err) {
@@ -89,7 +90,7 @@ export const addProduct : APIGatewayProxyHandler = (event, context, callback) =>
       })
     }
     if(data) {
-      const response: Product = Item 
+      const response: Unit = Item 
       callback(null, {
         statusCode: 201,
         body: JSON.stringify(response)

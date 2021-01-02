@@ -5,14 +5,29 @@ Resources:
       TableName: PRODUCTS
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
-        - AttributeName: productId
+        - AttributeName: id
           AttributeType: S
         - AttributeName: userId
           AttributeType: S
       KeySchema:
         - AttributeName: userId
           KeyType: HASH
-        - AttributeName: productId
+        - AttributeName: id
+          KeyType: RANGE
+  unitsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: UNITS
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: userId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+        - AttributeName: id
           KeyType: RANGE
   apiAuthorizer:
     Type: AWS::ApiGateway::Authorizer

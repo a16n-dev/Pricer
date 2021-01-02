@@ -20,3 +20,44 @@ provider:
   stage: dev
   region: ap-southeast-2
 resources: '${file(resources.yml)}'
+functions:
+  getProducts:
+    handler: productHandler.getProducts
+    events:
+      - http:
+          path: products
+          method: get
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: apiAuthorizer
+  addProduct:
+    handler: productHandler.addProduct
+    events:
+      - http:
+          path: products/new
+          method: post
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: apiAuthorizer
+  getUnits:
+    handler: unitHandler.getUnits
+    events:
+      - http:
+          path: units
+          method: get
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: apiAuthorizer
+  addUnit:
+    handler: unitHandler.addUnit
+    events:
+      - http:
+          path: units/new
+          method: post
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: apiAuthorizer

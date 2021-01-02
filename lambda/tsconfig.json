@@ -3,12 +3,7 @@
         "target": "ES5",
         "experimentalDecorators": true,
         "outDir": "ts-built",
-        "esModuleInterop": true
-    },
-    "exclude": [
-        "src/slsa"
-    ],
-    "include": [
-        "src"
-    ]
+        "esModuleInterop": true,
+        "rootDir": "src"
+    }
 }
