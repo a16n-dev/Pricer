@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Spinner } from 'reactstrap';
+import LoadingPage from '../pages/common/LoadingPage';
 
 export interface routeMap {
     Fallback?: React.ComponentType;
@@ -19,7 +20,9 @@ interface redirect {
     to: string;
 }
 
-export const renderRoutes = ({Fallback = () => <Spinner/>, routes, redirects}: routeMap) => () => (
+export const renderRoutes = ({
+  Fallback = () => <LoadingPage/>, routes, redirects,
+}: routeMap) => () => (
   <Suspense fallback={<Fallback/>}>
     <Switch>
       {routes?.map(({path, Component, exact}, i) => (
