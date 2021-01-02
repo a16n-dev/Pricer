@@ -12,8 +12,6 @@ const utilRouteMap : routeMap = {
       exact: false,
     },
   ],
-
-
 };
 
 export default utilRouteMap;
