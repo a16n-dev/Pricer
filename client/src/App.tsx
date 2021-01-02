@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import Navbar from './components/Navbar';
+import useFetchData from './hooks/useFetchData';
 import { AuthState, hydrateAuth } from './redux/AuthSlice';
 import { RootState, useAppDispatch } from './redux/store';
 import ProtectedRoutes from './routes/ProtectedRoutes';
@@ -16,6 +17,9 @@ const App = () => {
   } = useSelector<RootState, AuthState>((state) => state.auth);
 
   const dispatch = useAppDispatch();
+
+  // Fetch data from server
+  useFetchData();
 
   useEffect(() => {
     dispatch(hydrateAuth());

@@ -3,8 +3,8 @@ import {
   createSlice,
   SliceCaseReducers,
 } from '@reduxjs/toolkit';
-import { Product, Unit } from '../models/models';
-import { v4 as uuidv4 } from 'uuid';
+import { ApiClient } from '../api/client';
+import { Unit, UnitData, UnitDTO } from '../models/Unit';
 
 
 export type UnitState = {
@@ -13,31 +13,15 @@ export type UnitState = {
     units: {[key: string]: Unit};
 }
 
-export interface CreateUnitData {
-    name: string;
-    symbol: string;
-    base: 0 | 1;
-    relativeUnitId?: string;
-    relativeQuantity?: number;
-    quantity: number;
-}
-
 export interface UpdateUnitData {
   id: string;
-  unit: CreateUnitData;
+  unit: UnitData;
 }
 
 export const createUnit = createAsyncThunk(
   'units/create',
-  async (unitData: CreateUnitData, thunkAPI): Promise<Unit> => {
-    const unit: Unit = {
-      id: uuidv4(),
-      dateCreated: new Date(),
-      dateModified: new Date(),
-      ...unitData,
-    };
-
-    console.log(unit);
+  async (unitData: UnitData, thunkAPI): Promise<Unit> => {
+    const unit = await ApiClient.createUnit(unitData);
 
     return unit;
   },
@@ -45,10 +29,9 @@ export const createUnit = createAsyncThunk(
 
 export const updateUnit = createAsyncThunk(
   'units/update',
-  async (unitData: UpdateUnitData, thunkAPI): Promise<{id: string, data: Partial<Unit>}> => {
-    const unit: Partial<Unit> = {
+  async (unitData: UpdateUnitData, thunkAPI): Promise<{id: string, data: UnitDTO}> => {
+    const unit: UnitDTO = {
       ...unitData.unit,
-      dateModified: new Date(),
     };
 
     console.log(unit);
@@ -63,6 +46,15 @@ export const updateUnit = createAsyncThunk(
 export const deleteUnit = createAsyncThunk(
   'units/delete',
   async (unitId: string, thunkAPI): Promise<string> => unitId,
+);
+
+export const fetchUnits = createAsyncThunk(
+  'units/fetch',
+  async (): Promise<Array<Unit>> => {
+
+    const units = await ApiClient.getUnits();
+    return units;
+  },
 );
 
 const UnitSlice = createSlice<UnitState, SliceCaseReducers<UnitState>>({
@@ -101,6 +93,7 @@ const UnitSlice = createSlice<UnitState, SliceCaseReducers<UnitState>>({
       state.units[payload.id] ={
         ...state.units[payload.id],
         ...payload.data,
+        dateUpdated: Date.now(),
       };
 
       // Need to recursively update other units that may use this unit as a reference
@@ -122,6 +115,15 @@ const UnitSlice = createSlice<UnitState, SliceCaseReducers<UnitState>>({
 
     builder.addCase(deleteUnit.rejected, (state, action) => {
       state.loading = false;
+    });
+
+    builder.addCase(fetchUnits.fulfilled, (state, {payload}) => {
+
+      state.units = payload.reduce((map: any, p) => {
+        map[p.id] = p;
+        return map;
+      }, {});
+      state.count = Object.keys(state.units).length;
     });
   },
 });

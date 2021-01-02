@@ -1,6 +1,5 @@
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
   Button,
   Col,
@@ -8,10 +7,10 @@ import {
   Row,
 } from 'reactstrap';
 import withReduxState, { reduxStateProps } from '../../components/HOC/withReduxState';
-import { Unit } from '../../models/models';
+import { Unit, UnitData } from '../../models/Unit';
 import { useAppDispatch } from '../../redux/store';
-import { createUnit, CreateUnitData, deleteUnit, UnitState, updateUnit } from '../../redux/UnitSlice';
-import UnitForm, { UnitFormFields } from './UnitForm';
+import { createUnit, deleteUnit, UnitState, updateUnit } from '../../redux/UnitSlice';
+import UnitForm from './UnitForm';
 import UnitTable from './UnitTable';
 
 const ProductIndex : React.FC<reduxStateProps<UnitState>> = ({state}) => {
@@ -22,7 +21,7 @@ const ProductIndex : React.FC<reduxStateProps<UnitState>> = ({state}) => {
 
   const units = Object.values(state.units);
 
-  const onSubmit = async (data: CreateUnitData) => {
+  const onSubmit = async (data: UnitData) => {
     if(selectedUnit){
 
       // Update action

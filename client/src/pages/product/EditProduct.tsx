@@ -3,8 +3,8 @@ import { FieldValues } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import withReduxState, { reduxStateProps } from '../../components/HOC/withReduxState';
-import { Product } from '../../models/models';
-import ProductForm, { productFormData } from './ProductForm';
+import { Product } from '../../models/Product';
+import ProductForm from './ProductForm';
 
 interface URLParams {
   id: string

@@ -4,7 +4,8 @@ import { FieldValues } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { Col, Container, Row } from 'reactstrap';
 import withConfirmation, { confirmationProps } from '../../components/HOC/withConfirmation';
-import withInitialState, { initialStateProps } from '../../components/HOC/withInitialState';
+import withReduxState, { reduxStateProps } from '../../components/HOC/withReduxState';
+import { Unit } from '../../models/Unit';
 import { createProduct } from '../../redux/ProductSlice';
 import { useAppDispatch } from '../../redux/store';
 import ProductForm from './ProductForm';
@@ -14,14 +15,14 @@ interface createProductProps {
 }
 
 interface initialState {
-  units: Array<{value: string; label: string}>
+  units: Array<Unit>
 }
 
 const CreateProduct: React.FC<
   confirmationProps &
   createProductProps &
-  initialStateProps<initialState>
- > = ({confirm, initialState}) => {
+  reduxStateProps<initialState>
+ > = ({confirm, state}) => {
    const { enqueueSnackbar } = useSnackbar();
    const history = useHistory();
    const dispatch = useAppDispatch();
@@ -59,6 +60,10 @@ const CreateProduct: React.FC<
        history.push('/products');
      });
    };
+   const unitOptions = state.units.map(u => ({
+     label: `${u.symbol} (${u.name})`,
+     value: u.id,
+   }));
 
    return (
      <Container>
@@ -69,24 +74,16 @@ const CreateProduct: React.FC<
        </Row>
        <Row>
          <Col>
-           <ProductForm onCancel={onCancel} onSubmit={onSubmit} units={initialState.units}/>
+           <ProductForm onCancel={onCancel} onSubmit={onSubmit} units={unitOptions}/>
          </Col>
        </Row>
      </Container>
    );
  };
 
-export default withInitialState<createProductProps, initialState>(
-  withConfirmation<createProductProps & initialStateProps<initialState>>(CreateProduct),
-  () => {
-
-    // return state here
-    const res = {
-      units: [
-        {value: 'g', label: 'Grams (g)'},
-        {value: 'kg', label: 'Kilograms (kg)'},
-      ],
-    };
-    return res;
-  },
+export default withReduxState<createProductProps, initialState>(
+  withConfirmation<createProductProps & reduxStateProps<initialState>>(CreateProduct),
+  (state) => ({
+    units: Object.values(state.units.units),
+  }),
 );

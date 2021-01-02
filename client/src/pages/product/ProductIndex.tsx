@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Button,
@@ -10,13 +10,12 @@ import {
   Row,
 } from 'reactstrap';
 import withReduxState, { reduxStateProps } from '../../components/HOC/withReduxState';
-import { ProductState } from '../../redux/ProductSlice';
+import { fetchProducts, ProductState } from '../../redux/ProductSlice';
+import { useAppDispatch } from '../../redux/store';
 import ProductTable from './ProductTable';
 
 
-
 const ProductIndex : React.FC<reduxStateProps<ProductState>> = ({state}) => {
-  
 
   const [ searchText, setSearchText ] = useState<string>();
   

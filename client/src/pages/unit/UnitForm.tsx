@@ -2,12 +2,11 @@ import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Button, Card, CardBody, CardHeader, Col, CustomInput, FormFeedback, FormGroup, Input, InputGroup, Label, Row } from 'reactstrap';
 import CustomSelect from '../../components/CustomSelect';
-import { Unit } from '../../models/models';
-import { CreateUnitData } from '../../redux/UnitSlice';
+import { Unit, UnitData } from '../../models/Unit';
 
 interface UnitFormProps {
     existingUnit?: Unit;
-    onSubmit?: (data: CreateUnitData) => void;
+    onSubmit?: (data: UnitData) => void;
     units: Array<Unit>;
     onDelete: () => void;
     disableForm: boolean;
@@ -27,13 +26,14 @@ export interface UnitFormFields {
 const BASE_UNIT: unitOption = {
   label: 'BASE',
   value: {
+    userId: '1',
     id: '0',
     name: 'BASE',
     symbol: '',
     base: 0,
     quantity: 1,
-    dateCreated: new Date(),
-    dateModified: new Date(),
+    dateCreated: Date.now(),
+    dateUpdated: Date.now(),
   },
 };
 
@@ -82,7 +82,7 @@ const UnitForm: React.FC<UnitFormProps> = ({existingUnit, onSubmit, units, onDel
 
   const preSubmit = (data : UnitFormFields) => {
 
-    const res: CreateUnitData = {
+    const res: UnitData = {
       name: data.UnitName,
       symbol: data.UnitSymbol,
       base: Number(data.UnitBase) as 0 | 1,

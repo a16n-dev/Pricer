@@ -2,21 +2,13 @@ import React from 'react';
 import { Controller, FieldValues, useForm } from 'react-hook-form';
 import { Button, Col, FormFeedback, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Label } from 'reactstrap';
 import CustomSelect from '../../components/CustomSelect';
+import { ProductData } from '../../models/Product';
 
 interface productFormProps {
     onSubmit: (data: FieldValues) => void;
     onCancel: () => void;
-    initialState?: productFormData;
+    initialState?: ProductData;
     units: Array<{value: string; label: string}>
-}
-
-export interface productFormData {
-    name: string;
-    cost: number;
-    quantity: number;
-    units: string;
-    description?: string;
-    brand?: string;
 }
 
 const ProductForm: React.FC<productFormProps> = ({onSubmit, onCancel, units, initialState}) => {

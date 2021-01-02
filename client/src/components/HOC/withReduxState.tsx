@@ -16,7 +16,6 @@ const withReduxState = <ComponentProps, StateType, URLParams = any>(
 
     const params: URLParams = useParams<URLParams>();
     const state = useSelector<RootState>((store) => selectorFunction(store, params));
-    console.log(params);
     return (
       <>
         <Component {...props} state={state as StateType}/>

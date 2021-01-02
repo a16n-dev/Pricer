@@ -3,8 +3,9 @@ import {
   createSlice,
   SliceCaseReducers,
 } from '@reduxjs/toolkit';
-import { Product } from '../models/models';
 import { v4 as uuidv4 } from 'uuid';
+import { ApiClient } from '../api/client';
+import { Product, ProductData } from '../models/Product';
 
 
 export type ProductState = {
@@ -13,36 +14,21 @@ export type ProductState = {
     products: {[key: string]: Product};
 }
 
-interface CreateProductData {
-    name: string;
-    brand?: string;
-    description?: string;
-    cost: number;
-    quantity: number;
-    units: string;
-}
-
 export const createProduct = createAsyncThunk(
-  'products/createProduct',
-  async (productData: CreateProductData, thunkAPI): Promise<Product> => {
+  'products/create',
+  async (productData: ProductData, thunkAPI): Promise<Product> => {
 
-    /**
-     * This is eventually where the api call will live
-     */
-    
-    // Do validation here
-    const product: Product = {
-      id: uuidv4(),
-      dateCreated: new Date(),
-      dateModified: new Date(),
-      ...productData,
-    };
-
-    console.log(product);
-
+    const product = await ApiClient.createProduct(productData);
     return product;
+  },
+);
 
+export const fetchProducts = createAsyncThunk(
+  'products/fetch',
+  async (): Promise<Array<Product>> => {
 
+    const products = await ApiClient.getProducts();
+    return products;
   },
 );
 
@@ -70,6 +56,18 @@ const ProductSlice = createSlice<ProductState, SliceCaseReducers<ProductState>>(
     builder.addCase(createProduct.rejected, (state, action) => {
       state.loading = false;
     });
+
+
+    builder.addCase(fetchProducts.fulfilled, (state, {payload}) => {
+
+      state.products = payload.reduce((map: any, p) => {
+        map[p.id] = p;
+        return map;
+      }, {});
+      state.count = Object.keys(state.products).length;
+    });
+
+
   },
 });
   

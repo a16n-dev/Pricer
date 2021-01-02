@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Col, Pagination, PaginationItem, PaginationLink, Row, Table } from 'reactstrap';
-import { Product } from '../../models/models';
+import { Product } from '../../models/Product';
 
 interface productTableProps {
     products: Array<Product>
