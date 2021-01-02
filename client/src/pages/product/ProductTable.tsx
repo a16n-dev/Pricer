@@ -30,7 +30,6 @@ const ProductTable: React.FC<productTableProps> = ({products}) => {
       <Table hover={true}>
         <thead>
           <tr>
-            <th>id #</th>
             <th>Product Name</th>
             <th>Quantity</th>
             <th>Cost</th>
@@ -40,7 +39,6 @@ const ProductTable: React.FC<productTableProps> = ({products}) => {
         <tbody>
           {products.slice(startItem, endItem).map(({id,name, cost, quantity}, i) => (
             <tr key={i} onClick={() => history.push(`/products/view/${id}`)}>
-              <td>{i}</td>
               <td>{name}</td>
               <td>{quantity}</td>
               <td>${cost}</td>
