@@ -38,8 +38,8 @@ const ProductTable: React.FC<productTableProps> = ({products}) => {
           </tr>
         </thead>
         <tbody>
-          {products.slice(startItem, endItem).map(({name, cost, quantity}, i) => (
-            <tr key={i} onClick={() => history.push('/')}>
+          {products.slice(startItem, endItem).map(({id,name, cost, quantity}, i) => (
+            <tr key={i} onClick={() => history.push(`/products/view/${id}`)}>
               <td>{i}</td>
               <td>{name}</td>
               <td>{quantity}</td>

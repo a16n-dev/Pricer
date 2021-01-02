@@ -1,8 +1,7 @@
 import React from 'react';
 import { Controller, FieldValues, useForm } from 'react-hook-form';
-import { Button, Col, FormFeedback, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Label, Row } from 'reactstrap';
+import { Button, Col, FormFeedback, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Label } from 'reactstrap';
 import CustomSelect from '../../components/CustomSelect';
-import { useAppDispatch } from '../../redux/store';
 
 interface productFormProps {
     onSubmit: (data: FieldValues) => void;
@@ -11,25 +10,27 @@ interface productFormProps {
     units: Array<{value: string; label: string}>
 }
 
-interface productFormData {
+export interface productFormData {
     name: string;
     cost: number;
     quantity: number;
-    unit: string;
+    units: string;
     description?: string;
     brand?: string;
 }
 
-const ProductForm: React.FC<productFormProps> = ({onSubmit, onCancel, units}) => {
+const ProductForm: React.FC<productFormProps> = ({onSubmit, onCancel, units, initialState}) => {
 
-  const { register, handleSubmit, errors, control } = useForm();
-
-  const initialState = {
-    name: 'peanut butter',
-    cost: 5.23,
-    quantity: 300,
-    unit: 'gram',
-  };
+  const { register, handleSubmit, errors, control } = useForm({
+    defaultValues: {
+      productName: initialState?.name,
+      productPrice: initialState?.cost,
+      productQuantity: initialState?.quantity,
+      productUnit: initialState?.units,
+      productBrand: initialState?.brand,
+      productDescription: initialState?.description,
+    },
+  });
 
   const preSubmit = (data : FieldValues) => {
     Object.keys(data).forEach(key => {
@@ -51,7 +52,7 @@ const ProductForm: React.FC<productFormProps> = ({onSubmit, onCancel, units}) =>
             innerRef={register({
               required: true,
             })}
-            invalid={errors.productName}
+            invalid={Boolean(errors.productName)}
           />
           {errors.productName && <FormFeedback>Please enter a product name</FormFeedback>}
         </Col>
@@ -74,7 +75,7 @@ const ProductForm: React.FC<productFormProps> = ({onSubmit, onCancel, units}) =>
                 required: true,
                 min: 0,
               })}
-              invalid={errors.productPrice}
+              invalid={Boolean(errors.productPrice)}
             />
             {errors.productPrice && <FormFeedback>Please enter a product price</FormFeedback>}
           </InputGroup>
@@ -94,7 +95,7 @@ const ProductForm: React.FC<productFormProps> = ({onSubmit, onCancel, units}) =>
                 required: true,
                 min: 0,
               })}
-              invalid={errors.productQuantity}
+              invalid={Boolean(errors.productQuantity)}
             />
               
             <Controller

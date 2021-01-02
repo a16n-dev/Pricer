@@ -50,9 +50,9 @@ const ProductIndex : React.FC<reduxStateProps<ProductState>> = ({state}) => {
           </FormGroup>
         </Col>
       </Row>
-
-      <ProductTable products={products}/>
-
+      <Row>
+        <ProductTable products={products}/>
+      </Row>
     </Container>);
 }
   ;

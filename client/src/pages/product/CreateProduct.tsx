@@ -47,7 +47,7 @@ const CreateProduct: React.FC<
        enqueueSnackbar(`Created ${productName}`, {
          variant:'success',
        });
-       history.push('/products');
+       history.push(`/products/view/${res.payload.id}`);
      }
 
     
