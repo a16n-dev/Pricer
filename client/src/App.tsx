@@ -5,7 +5,9 @@ import { Container } from 'reactstrap';
 import Navbar from './components/Navbar';
 import useFetchData from './hooks/useFetchData';
 import { AuthState, hydrateAuth } from './redux/AuthSlice';
+import { fetchProducts } from './redux/ProductSlice';
 import { RootState, useAppDispatch } from './redux/store';
+import { fetchUnits } from './redux/UnitSlice';
 import ProtectedRoutes from './routes/ProtectedRoutes';
 import PublicRoutes from './routes/PublicRoutes';
 
@@ -18,12 +20,18 @@ const App = () => {
 
   const dispatch = useAppDispatch();
 
-  // Fetch data from server
-  useFetchData();
+
 
   useEffect(() => {
     dispatch(hydrateAuth());
   }, [ dispatch ]);
+
+  useEffect(() => {
+    if(isAuthenticated){
+      dispatch(fetchProducts());
+      dispatch(fetchUnits());
+    }
+  }, [ isAuthenticated ]);
 
   return (
     <Router>

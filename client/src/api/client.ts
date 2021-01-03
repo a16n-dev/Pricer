@@ -48,5 +48,4 @@ export class ApiClient {
     });
     return res.data as Array<Unit>;
   }
-
 }
