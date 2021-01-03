@@ -29,6 +29,9 @@ const ProductIndex : React.FC<reduxStateProps<UnitState>> = ({state}) => {
 
       // Update action
       const res = await dispatch(updateUnit({id: selectedUnit.id, unit: data}));
+      if(updateUnit.rejected.match(res)){
+        console.log(res);
+      }
     } else {
 
       // Create action
@@ -64,7 +67,7 @@ const ProductIndex : React.FC<reduxStateProps<UnitState>> = ({state}) => {
         </Col>
       </Row>
       <Row>
-        <Col sm={7}>
+        <Col sm={7} className={'overflow-auto'} style={{height: '75vh'}}>
           <UnitTable
             units={units}
             selectedUnitId={selectedUnit?.id}

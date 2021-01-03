@@ -1,10 +1,17 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
+import { ApiClient } from '../../api/client';
 import { UnitState } from './UnitSlice';
 
 export const deleteUnit = createAsyncThunk(
   'units/delete',
-  async (unitId: string, thunkAPI): Promise<string> => unitId,
-);
+  async (unitId: string, thunkAPI): Promise<string> => {
+    const res = await ApiClient.deleteUnit(unitId);
+    if(res === 200){
+      return unitId;
+    } else {
+      throw new Error();
+    }
+  });
 
 export const deleteUnitReducers = (builder: ActionReducerMapBuilder<UnitState>) => {
 

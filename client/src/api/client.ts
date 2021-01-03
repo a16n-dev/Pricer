@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Product, ProductData } from '../models/Product';
-import { Unit, UnitData } from '../models/Unit';
+import { Unit, UnitData, UnitDTO } from '../models/Unit';
 import store from '../redux/store';
 
 export class ApiClient {
@@ -45,5 +45,26 @@ export class ApiClient {
       url: 'units',
     });
     return res.data as Array<Unit>;
+  }
+
+  static async deleteUnit(id: string) {
+    const res = await axios({
+      baseURL: process.env.REACT_APP_API_URL,
+      headers: {'authorization': store.getState().auth.token},
+      method: 'delete',
+      url: `/units/${id}`,
+    });
+    return res.status;
+  }
+
+  static async updateUnit(id: string, data: UnitData) {
+    const res = await axios({
+      baseURL: process.env.REACT_APP_API_URL,
+      headers: {'authorization': store.getState().auth.token},
+      method: 'patch',
+      url: `/units/${id}`,
+      data,
+    });
+    return res.status;
   }
 }

@@ -1,4 +1,5 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
+import { ApiClient } from '../../api/client';
 import { Unit, UnitData, UnitDTO } from '../../models/Unit';
 import { UnitState } from './UnitSlice';
 
@@ -10,17 +11,11 @@ export interface UpdateUnitData {
 
 export const updateUnit = createAsyncThunk(
   'units/update',
-  async (unitData: UpdateUnitData, thunkAPI): Promise<{id: string, data: UnitDTO}> => {
-    const unit: UnitDTO = {
-      ...unitData.unit,
-    };
+  async ({id, unit}: UpdateUnitData, thunkAPI): Promise<UpdateUnitData> => {
+    
+    const status = await ApiClient.updateUnit(id, unit);
   
-    console.log(unit);
-  
-    return {
-      data: unit,
-      id: unitData.id,
-    };
+    return {id, unit};
   },
 );
   
@@ -31,12 +26,14 @@ export const updateUnitReducers = (builder: ActionReducerMapBuilder<UnitState>) 
   });
   
   builder.addCase(updateUnit.fulfilled, (state, {payload}) => {
+
     state.loading = false;
+
     delete state.units[payload.id].relativeUnitId;
     delete state.units[payload.id].relativeQuantity;
     state.units[payload.id] ={
       ...state.units[payload.id],
-      ...payload.data,
+      ...payload.unit,
       dateUpdated: Date.now(),
     };
   
