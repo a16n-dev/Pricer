@@ -16,15 +16,24 @@ const options =  {
 
 var docClient = new AWS.DynamoDB.DocumentClient(offline ? options : {});
 
+const headers = {
+  "Access-Control-Allow-Headers" : "Content-Type",
+  "Access-Control-Allow-Origin": "*",
+}
+
 export const getProducts : APIGatewayProxyHandler  = (event, context, callback) => {
 
-  let userId = context.identity?.cognitoIdentityId;
+  let userId = event.requestContext.authorizer.claims.sub
 
   if(!userId){
     if(offline){
       userId = '1';
     } else {
-      callback('No cognitoIdentityId found')
+      callback(null, {
+        statusCode: 401,
+        headers,
+        body: 'No congito user found'
+      })
     }
   }
 
@@ -38,6 +47,7 @@ export const getProducts : APIGatewayProxyHandler  = (event, context, callback) 
     if (err) {
         callback (null, {
             statusCode: 400,
+            headers,
             body: JSON.stringify(
               {
                 message: 'An error occurred',
@@ -48,6 +58,7 @@ export const getProducts : APIGatewayProxyHandler  = (event, context, callback) 
     } else {
         callback(null, {
             statusCode: 200,
+            headers,
             body: JSON.stringify(
               data.Items
             ),
@@ -60,13 +71,17 @@ export const getProducts : APIGatewayProxyHandler  = (event, context, callback) 
 export const addProduct : APIGatewayProxyHandler = (event, context, callback) => {
 
   const data: ProductData = JSON.parse(event.body || '{}')
-  let userId = context.identity?.cognitoIdentityId;
+  let userId = event.requestContext.authorizer.claims.sub
 
   if(!userId){
     if(offline){
       userId = '1';
     } else {
-      callback('No cognitoIdentityId found')
+      callback(null, {
+        statusCode: 401,
+        headers,
+        body: 'No congito user found'
+      })
     }
   }
 
@@ -85,6 +100,7 @@ export const addProduct : APIGatewayProxyHandler = (event, context, callback) =>
     if(err) {
       callback(null, {
         statusCode: 400,
+        headers,
         body: JSON.stringify(err)
       })
     }
@@ -92,6 +108,7 @@ export const addProduct : APIGatewayProxyHandler = (event, context, callback) =>
       const response: Product = Item 
       callback(null, {
         statusCode: 201,
+        headers,
         body: JSON.stringify(response)
       })
     }
