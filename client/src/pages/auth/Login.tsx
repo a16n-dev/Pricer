@@ -13,7 +13,7 @@ import {
   FormGroup,
   Label,
 } from 'reactstrap';
-import { login } from '../../redux/AuthSlice';
+import { login } from '../../redux/auth/login';
 import { useAppDispatch } from '../../redux/store';
 
 interface formData {

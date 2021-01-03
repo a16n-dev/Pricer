@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
-import AuthSlice from './AuthSlice';
+import AuthSlice from './auth/AuthSlice';
 import ProductSlice from './product/ProductSlice';
 import UnitSlice from './unit/UnitSlice';
 

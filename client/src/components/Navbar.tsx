@@ -1,8 +1,8 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Button, Nav, NavItem, NavLink } from 'reactstrap';
-import { logout } from '../redux/AuthSlice';
+import { Button, Nav, NavItem } from 'reactstrap';
+import { logout } from '../redux/auth/logout';
 
 const Navbar: React.FC = () => {
 
