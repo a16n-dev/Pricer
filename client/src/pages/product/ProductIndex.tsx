@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Button,
@@ -10,8 +10,7 @@ import {
   Row,
 } from 'reactstrap';
 import withReduxState, { reduxStateProps } from '../../components/HOC/withReduxState';
-import { fetchProducts, ProductState } from '../../redux/ProductSlice';
-import { useAppDispatch } from '../../redux/store';
+import { ProductState } from '../../redux/product/ProductSlice';
 import ProductTable from './ProductTable';
 
 

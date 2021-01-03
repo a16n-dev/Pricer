@@ -6,7 +6,7 @@ import { Col, Container, Row } from 'reactstrap';
 import withConfirmation, { confirmationProps } from '../../components/HOC/withConfirmation';
 import withReduxState, { reduxStateProps } from '../../components/HOC/withReduxState';
 import { Unit } from '../../models/Unit';
-import { createProduct } from '../../redux/ProductSlice';
+import { createProduct } from '../../redux/product/createProduct';
 import { useAppDispatch } from '../../redux/store';
 import ProductForm from './ProductForm';
 

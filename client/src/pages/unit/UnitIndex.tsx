@@ -9,7 +9,10 @@ import {
 import withReduxState, { reduxStateProps } from '../../components/HOC/withReduxState';
 import { Unit, UnitData } from '../../models/Unit';
 import { useAppDispatch } from '../../redux/store';
-import { createUnit, deleteUnit, UnitState, updateUnit } from '../../redux/UnitSlice';
+import { createUnit } from '../../redux/unit/createUnit';
+import { deleteUnit } from '../../redux/unit/deleteUnit';
+import { UnitState } from '../../redux/unit/UnitSlice';
+import { updateUnit } from '../../redux/unit/updateUnit';
 import UnitForm from './UnitForm';
 import UnitTable from './UnitTable';
 

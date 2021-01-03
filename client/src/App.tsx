@@ -3,11 +3,12 @@ import { useSelector } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import Navbar from './components/Navbar';
-import useFetchData from './hooks/useFetchData';
+
 import { AuthState, hydrateAuth } from './redux/AuthSlice';
-import { fetchProducts } from './redux/ProductSlice';
+import { fetchProducts } from './redux/product/fetchProducts';
 import { RootState, useAppDispatch } from './redux/store';
-import { fetchUnits } from './redux/UnitSlice';
+import { fetchUnits } from './redux/unit/fetchUnits';
+
 import ProtectedRoutes from './routes/ProtectedRoutes';
 import PublicRoutes from './routes/PublicRoutes';
 
