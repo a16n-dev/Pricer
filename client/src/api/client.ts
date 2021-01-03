@@ -10,7 +10,7 @@ export class ApiClient {
       baseURL: process.env.REACT_APP_API_URL,
       headers: {'authorization': store.getState().auth.token},
       url: 'products',
-      method: 'post',
+      method: 'get',
     });
     return res.data as Array<Product>;
   }
