@@ -30,8 +30,11 @@ export const logout = createAsyncThunk(
 
 export const hydrateAuth = createAsyncThunk(
   'auth/hydrate',
-  async () => {
-    await Auth.currentAuthenticatedUser();
+  async (): Promise<string> => {
+
+    const res = await Auth.currentAuthenticatedUser();
+    console.log(res.signInUserSession.idToken.jwtToken);
+    return res.signInUserSession.idToken.jwtToken;
   },
 );
 
@@ -55,9 +58,10 @@ const AuthSlice = createSlice<AuthState, SliceCaseReducers<AuthState>>({
 
     });
 
-    builder.addCase(hydrateAuth.fulfilled, (state, action) => {
+    builder.addCase(hydrateAuth.fulfilled, (state, {payload}) => {
       state.resolvingAuthState = false;
       state.isAuthenticated = true;
+      state.token = payload;
     });
     builder.addCase(hydrateAuth.rejected, (state, action) => {
       state.resolvingAuthState = false;
@@ -65,6 +69,7 @@ const AuthSlice = createSlice<AuthState, SliceCaseReducers<AuthState>>({
 
     builder.addCase(logout.fulfilled, (state, action) => {
       state.isAuthenticated = false;
+      delete state.token;
     });
   },
 });
