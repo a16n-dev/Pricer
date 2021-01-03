@@ -44,6 +44,7 @@ functions:
       - http:
           path: products
           method: get
+          cors: true
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId:
@@ -54,6 +55,7 @@ functions:
       - http:
           path: products/new
           method: post
+          cors: true
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId:
@@ -64,6 +66,7 @@ functions:
       - http:
           path: units
           method: get
+          cors: true
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId:
@@ -74,6 +77,59 @@ functions:
       - http:
           path: units/new
           method: post
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: apiAuthorizer
+  deleteUnit:
+    handler: unitHandler.deleteUnit
+    events:
+      - http:
+          path: units/{id}
+          method: delete
+          cors: true
+          request:
+            parameters:
+                paths:
+                  id: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: apiAuthorizer
+  updateUnit:
+    handler: unitHandler.updateUnit
+    events:
+      - http:
+          path: units/{id}
+          method: patch
+          cors: true
+          request:
+            parameters:
+                paths:
+                  id: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: apiAuthorizer
+  heartbeat:
+    handler: utilHandler.heartbeat
+    events:
+      - http:
+          path: heartbeat
+          method: get
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: apiAuthorizer
+  seedDB:
+    handler: utilHandler.seedDB
+    events:
+      - http:
+          path: seed
+          method: post
+          cors: true
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId:

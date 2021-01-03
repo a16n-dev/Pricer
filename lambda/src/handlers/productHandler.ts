@@ -17,13 +17,13 @@ const options =  {
 var docClient = new AWS.DynamoDB.DocumentClient(offline ? options : {});
 
 const headers = {
-  "Access-Control-Allow-Headers" : "Content-Type",
-  "Access-Control-Allow-Origin": "*",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true,
 }
 
 export const getProducts : APIGatewayProxyHandler  = (event, context, callback) => {
 
-  let userId = event.requestContext.authorizer.claims.sub
+  let userId = event.requestContext.authorizer.claims?.sub
 
   if(!userId){
     if(offline){
@@ -71,7 +71,7 @@ export const getProducts : APIGatewayProxyHandler  = (event, context, callback) 
 export const addProduct : APIGatewayProxyHandler = (event, context, callback) => {
 
   const data: ProductData = JSON.parse(event.body || '{}')
-  let userId = event.requestContext.authorizer.claims.sub
+  let userId = event.requestContext.authorizer.claims?.sub
 
   if(!userId){
     if(offline){
