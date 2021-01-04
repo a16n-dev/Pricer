@@ -5,7 +5,13 @@ import { AuthState } from './AuthSlice';
 export const logout = createAsyncThunk(
   'auth/logout',
   async () => {
-    await Auth.signOut();
+
+    if(process.env.NODE_ENV === 'development'){
+      return localStorage.removeItem('auth');
+    } else {
+      return Auth.signOut();
+    }
+
   },
 );
 

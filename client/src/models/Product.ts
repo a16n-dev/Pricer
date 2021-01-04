@@ -1,4 +1,4 @@
-import { Dated, Owned, Unique } from "./Common";
+import { Dated, Owned, Unique } from './Common';
 
 // defined fields
 export interface ProductData {
@@ -7,7 +7,7 @@ export interface ProductData {
     description?: string;
     cost: number;
     quantity: number;
-    units: string;
+    unitId: string;
 }
 
 // Includes defined and generated fields

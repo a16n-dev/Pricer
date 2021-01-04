@@ -18,7 +18,7 @@ const ProductForm: React.FC<productFormProps> = ({onSubmit, onCancel, units, ini
       productName: initialState?.name,
       productPrice: initialState?.cost,
       productQuantity: initialState?.quantity,
-      productUnit: initialState?.units,
+      productUnit: units.find(u => u.value === initialState?.unitId),
       productBrand: initialState?.brand,
       productDescription: initialState?.description,
     },

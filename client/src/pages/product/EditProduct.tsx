@@ -4,15 +4,26 @@ import { useHistory } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import withReduxState, { reduxStateProps } from '../../components/HOC/withReduxState';
 import { Product } from '../../models/Product';
+import { Unit } from '../../models/Unit';
 import ProductForm from './ProductForm';
 
 interface URLParams {
   id: string
 }
 
-const EditProduct: React.FC<reduxStateProps<Product>> = ({state}) => {
+interface stateProps {
+  product: Product;
+  units: Array<Unit>
+}
+
+const EditProduct: React.FC<reduxStateProps<stateProps>> = ({state}) => {
 
   const history = useHistory();
+
+  const unitOptions = state.units.map(u => ({
+    label: `${u.symbol} (${u.name})`,
+    value: u.id,
+  }));
 
   if(!state){
     history.push('/not-found');
@@ -33,12 +44,20 @@ const EditProduct: React.FC<reduxStateProps<Product>> = ({state}) => {
 
   return (
     <Container>
-      <h1>Details of {state.name}</h1>
-      <ProductForm initialState={{...state}} onCancel={onCancel} onSubmit={onSubmit} units={[]}/>
+      <h1>Details of {state.product.name}</h1>
+      <ProductForm
+        initialState={{...state.product}}
+        onCancel={onCancel}
+        onSubmit={onSubmit}
+        units={unitOptions}/>
     </Container>
   );
 
 };
 
-export default withReduxState<{}, Product, URLParams>(EditProduct,
-  (state, params) => (state.products.products[params.id]));
+export default withReduxState<{}, stateProps, URLParams>(EditProduct,
+  (state, params) => (
+    {product: state.products.products[params.id],
+      units: Object.values(state.units.units),
+    }
+  ));

@@ -9,7 +9,14 @@ export const login = createAsyncThunk<
   {rejectValue: {__type: string, message: string}}
 >(
   'auth/login',
-  async ({username, password}) => Auth.signIn(username, password),
+  async ({username, password}) => {
+    if(process.env.NODE_ENV === 'development'){
+      console.log('hello');
+      return localStorage.setItem('auth', 'fakeToken');
+    } else {
+      return Auth.signIn(username, password);
+    }
+  },
 );
 
 export const loginReducers = (builder: ActionReducerMapBuilder<AuthState>) => {
