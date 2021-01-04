@@ -1,6 +1,6 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiClient } from '../../api/client';
-import { UnitState } from './UnitSlice';
+import UnitState from './unitState';
 
 export const deleteUnit = createAsyncThunk(
   'units/delete',

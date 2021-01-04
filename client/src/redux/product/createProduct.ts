@@ -1,7 +1,7 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiClient } from '../../api/client';
 import { Product, ProductData } from '../../models/Product';
-import { ProductState } from './ProductSlice';
+import ProductState from './productState';
 
 export const createProduct = createAsyncThunk(
   'products/create',

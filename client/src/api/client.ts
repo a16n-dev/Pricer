@@ -1,14 +1,24 @@
 import axios from 'axios';
 import { Product, ProductData } from '../models/Product';
-import { Unit, UnitData, UnitDTO } from '../models/Unit';
-import store from '../redux/store';
+import { Unit, UnitData } from '../models/Unit';
+
 
 export class ApiClient {
+
+  static token?: string
+
+  static setToken(token: string) {
+    this.token = token;
+  }
+
+  static clearToken() {
+    delete this.token;
+  }
 
   static async getProducts() {
     const res = await axios({
       baseURL: process.env.REACT_APP_API_URL,
-      headers: {'authorization': store.getState().auth.token},
+      headers: {'authorization': this.token},
       url: 'products',
       method: 'get',
     });
@@ -18,7 +28,7 @@ export class ApiClient {
   static async createProduct(data: ProductData) {
     const res = await axios({
       baseURL: process.env.REACT_APP_API_URL,
-      headers: {'authorization': store.getState().auth.token},
+      headers: {'authorization': this.token},
       method: 'post',
       url: 'products/new',
       data,
@@ -29,7 +39,7 @@ export class ApiClient {
   static async createUnit(data: UnitData) {
     const res = await axios({
       baseURL: process.env.REACT_APP_API_URL,
-      headers: {'authorization': store.getState().auth.token},
+      headers: {'authorization': this.token},
       method: 'post',
       url: 'units/new',
       data,
@@ -40,7 +50,7 @@ export class ApiClient {
   static async getUnits() {
     const res = await axios({
       baseURL: process.env.REACT_APP_API_URL,
-      headers: {'authorization': store.getState().auth.token},
+      headers: {'authorization': this.token},
       method: 'get',
       url: 'units',
     });
@@ -50,7 +60,7 @@ export class ApiClient {
   static async deleteUnit(id: string) {
     const res = await axios({
       baseURL: process.env.REACT_APP_API_URL,
-      headers: {'authorization': store.getState().auth.token},
+      headers: {'authorization': this.token},
       method: 'delete',
       url: `/units/${id}`,
     });
@@ -60,7 +70,7 @@ export class ApiClient {
   static async updateUnit(id: string, data: UnitData) {
     const res = await axios({
       baseURL: process.env.REACT_APP_API_URL,
-      headers: {'authorization': store.getState().auth.token},
+      headers: {'authorization': this.token},
       method: 'patch',
       url: `/units/${id}`,
       data,

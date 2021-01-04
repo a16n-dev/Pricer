@@ -7,8 +7,6 @@ export interface UnitTableProps {
     selectedUnitId?: string;
 }
 
-const units2 = Array(100 - 1).fill(0).map((_, idx) => idx);
-
 const UnitTable: React.FC<UnitTableProps> = ({units, setSelectedUnit, selectedUnitId}) => (
   <Table hover={true}>
     <thead>

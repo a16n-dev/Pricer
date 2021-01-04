@@ -2,19 +2,11 @@ import {
   createSlice,
   SliceCaseReducers,
 } from '@reduxjs/toolkit';
-import { Unit } from '../../models/Unit';
 import { createUnitReducers } from './createUnit';
 import { deleteUnitReducers } from './deleteUnit';
 import { fetchUnitsReducers } from './fetchUnits';
+import UnitState from './unitState';
 import { updateUnitReducers } from './updateUnit';
-
-
-export type UnitState = {
-    count: number;
-    loading: boolean;
-    units: {[key: string]: Unit};
-}
-
 
 const UnitSlice = createSlice<UnitState, SliceCaseReducers<UnitState>>({
   name: 'units',

@@ -10,7 +10,8 @@ import {
   Row,
 } from 'reactstrap';
 import withReduxState, { reduxStateProps } from '../../components/HOC/withReduxState';
-import { ProductState } from '../../redux/product/ProductSlice';
+import ProductState from '../../redux/product/productState';
+
 import ProductTable from './ProductTable';
 
 

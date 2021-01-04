@@ -1,18 +1,11 @@
 import {
-  createAsyncThunk,
   createSlice,
   SliceCaseReducers,
 } from '@reduxjs/toolkit';
-import { Auth } from 'aws-amplify';
+import AuthState from './authState';
 import { hydrateAuthReducers } from './hydrateAuth';
 import { loginReducers } from './login';
 import { logoutReducers } from './logout';
-
-export type AuthState = {
-  resolvingAuthState: boolean;
-  isAuthenticated: boolean;
-  token?: string;
-}
   
 const AuthSlice = createSlice<AuthState, SliceCaseReducers<AuthState>>({
   name: 'auth',

@@ -1,7 +1,8 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiClient } from '../../api/client';
 import { Unit } from '../../models/Unit';
-import { UnitState } from './UnitSlice';
+import UnitState from './unitState';
+
 
 export const fetchUnits = createAsyncThunk(
   'units/fetch',

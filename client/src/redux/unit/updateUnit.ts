@@ -1,8 +1,7 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiClient } from '../../api/client';
-import { Unit, UnitData, UnitDTO } from '../../models/Unit';
-import { UnitState } from './UnitSlice';
-
+import { Unit, UnitData } from '../../models/Unit';
+import UnitState from './unitState';
 export interface UpdateUnitData {
   id: string;
   unit: UnitData;

@@ -23,7 +23,7 @@ const Navbar: React.FC = () => {
           <h4>Pricer</h4>
         </NavItem>
         {navItems.map((v, i) => (
-          <NavItem>
+          <NavItem key={i}>
             <Button color={'link'} onClick={() => history.push(v.link)}>{v.text}</Button>
           </NavItem>
         ))}

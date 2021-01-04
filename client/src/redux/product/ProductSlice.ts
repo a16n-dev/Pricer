@@ -2,16 +2,9 @@ import {
   createSlice,
   SliceCaseReducers,
 } from '@reduxjs/toolkit';
-import { Product } from '../../models/Product';
-import { createProductReducers } from './createProduct';
+import ProductState from './productState';
 import { fetchProductsReducers } from './fetchProducts';
-
-
-export type ProductState = {
-    count: number;
-    loading: boolean;
-    products: {[key: string]: Product};
-}
+import { createProductReducers } from './createProduct';
 
 const ProductSlice = createSlice<ProductState, SliceCaseReducers<ProductState>>({
   name: 'products',
@@ -24,12 +17,8 @@ const ProductSlice = createSlice<ProductState, SliceCaseReducers<ProductState>>(
    
   },
   extraReducers: builder => {
-
-    // fetchProductsReducers(builder);
-
+    fetchProductsReducers(builder);
     createProductReducers(builder);
-
-    
   },
 });
   

@@ -1,6 +1,6 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
 import { Auth } from 'aws-amplify';
-import { AuthState } from './AuthSlice';
+import AuthState from './authState';
 
 // eslint-disable-next-line max-len
 export const login = createAsyncThunk<

@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import {
   Button,
   Col,
-  Container,
   Row,
 } from 'reactstrap';
 import ContainedContainer from '../../components/ContainedContainer';
@@ -13,7 +12,7 @@ import { Unit, UnitData } from '../../models/Unit';
 import { useAppDispatch } from '../../redux/store';
 import { createUnit } from '../../redux/unit/createUnit';
 import { deleteUnit } from '../../redux/unit/deleteUnit';
-import { UnitState } from '../../redux/unit/UnitSlice';
+import UnitState from '../../redux/unit/unitState';
 import { updateUnit } from '../../redux/unit/updateUnit';
 import UnitForm from './UnitForm';
 import UnitTable from './UnitTable';

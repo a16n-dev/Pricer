@@ -1,13 +1,14 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
 import { Auth } from 'aws-amplify';
-import { AuthState } from './AuthSlice';
+import { ApiClient } from '../../api/client';
+import AuthState from './authState';
 
 export const hydrateAuth = createAsyncThunk(
   'auth/hydrate',
   async (): Promise<string> => {
     
     if(process.env.NODE_ENV === 'development'){
-      const d =  localStorage.getItem('auth');
+      const d = localStorage.getItem('auth');
       if(d){
         return d;
       }else {
@@ -15,8 +16,11 @@ export const hydrateAuth = createAsyncThunk(
       }
     }
     const res = await Auth.currentAuthenticatedUser();
-    console.log(res.signInUserSession.idToken.jwtToken);
-    return res.signInUserSession.idToken.jwtToken;
+    const token = res.signInUserSession.idToken.jwtToken;
+
+    ApiClient.setToken(token);
+
+    return token;
   },
 );
 

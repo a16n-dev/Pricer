@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { Container } from 'reactstrap';
 
 const ContainedContainer: React.FC = ({children}) => {
     
