@@ -13,6 +13,7 @@ import {
   FormGroup,
   Label,
 } from 'reactstrap';
+import ContainedContainer from '../../components/ContainedContainer';
 import { login } from '../../redux/auth/login';
 import { useAppDispatch } from '../../redux/store';
 
@@ -34,7 +35,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Container className={'min-vh-100 d-flex align-items-center'}>
+    <ContainedContainer>
       <Col sm={6} className={'col-sm-12 col-md-6 offset-md-3'}>
         <Card>
           <CardBody>
@@ -70,7 +71,7 @@ const Login: React.FC = () => {
           </CardBody>
         </Card>
       </Col>
-    </Container>
+    </ContainedContainer>
   );
 };
 

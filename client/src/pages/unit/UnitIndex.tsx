@@ -6,7 +6,9 @@ import {
   Container,
   Row,
 } from 'reactstrap';
+import ContainedContainer from '../../components/ContainedContainer';
 import withReduxState, { reduxStateProps } from '../../components/HOC/withReduxState';
+import ScrollContainer from '../../components/ScrollContainer';
 import { Unit, UnitData } from '../../models/Unit';
 import { useAppDispatch } from '../../redux/store';
 import { createUnit } from '../../redux/unit/createUnit';
@@ -57,7 +59,7 @@ const ProductIndex : React.FC<reduxStateProps<UnitState>> = ({state}) => {
   };
 
   return(
-    <Container>
+    <ContainedContainer>
       <Row className={'mb-5'}>
         <Col>
           <h1 className={'display-4 mb-0'}>Units</h1>
@@ -66,13 +68,15 @@ const ProductIndex : React.FC<reduxStateProps<UnitState>> = ({state}) => {
           <Button onClick={createNew} color={'primary'} className={'ml-auto'}>Create Unit</Button>
         </Col>
       </Row>
-      <Row>
-        <Col sm={7} className={'overflow-auto'} style={{height: '75vh'}}>
-          <UnitTable
-            units={units}
-            selectedUnitId={selectedUnit?.id}
-            setSelectedUnit={setSelectedUnit}
-          />
+      <Row className={'flex-grow-1'}>
+        <Col sm={7}>
+          <ScrollContainer>
+            <UnitTable
+              units={units}
+              selectedUnitId={selectedUnit?.id}
+              setSelectedUnit={setSelectedUnit}
+            />
+          </ScrollContainer>
         </Col>
         <Col>
           <UnitForm
@@ -85,7 +89,7 @@ const ProductIndex : React.FC<reduxStateProps<UnitState>> = ({state}) => {
         </Col>
         
       </Row>
-    </Container>
+    </ContainedContainer>
   );
 };
 
