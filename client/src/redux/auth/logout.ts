@@ -1,5 +1,6 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
 import { Auth } from 'aws-amplify';
+import { ApiClient } from '../../api/client';
 import AuthState from './authState';
 
 export const logout = createAsyncThunk(
@@ -9,6 +10,7 @@ export const logout = createAsyncThunk(
     if(process.env.NODE_ENV === 'development'){
       return localStorage.removeItem('auth');
     } else {
+      ApiClient.clearToken();
       return Auth.signOut();
     }
 

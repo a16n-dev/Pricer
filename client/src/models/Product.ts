@@ -1,4 +1,4 @@
-import { Dated, Owned, Unique } from './Common';
+import { Dated, Owned, Unique } from "./Common";
 
 // defined fields
 export interface ProductData {
