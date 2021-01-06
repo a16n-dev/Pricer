@@ -8,6 +8,7 @@ import {
 import ContainedContainer from '../../components/ContainedContainer';
 import withReduxState, { reduxStateProps } from '../../components/HOC/withReduxState';
 import ScrollContainer from '../../components/ScrollContainer';
+import SelectTable, { columnMappings } from '../../components/SelectTable';
 import { Unit, UnitData } from '../../models/Unit';
 import { useAppDispatch } from '../../redux/store';
 import { createUnit } from '../../redux/unit/createUnit';
@@ -15,7 +16,6 @@ import { deleteUnit } from '../../redux/unit/deleteUnit';
 import UnitState from '../../redux/unit/unitState';
 import { updateUnit } from '../../redux/unit/updateUnit';
 import UnitForm from './UnitForm';
-import UnitTable from './UnitTable';
 
 const ProductIndex : React.FC<reduxStateProps<UnitState>> = ({state}) => {
   
@@ -57,6 +57,12 @@ const ProductIndex : React.FC<reduxStateProps<UnitState>> = ({state}) => {
     }
   };
 
+  const tableMappings: columnMappings<Unit> = {
+    'Unit Name': u => u.name,
+    'Symbol': u => u.symbol,
+    'Metric': u => `${u.quantity}${u.base === 0 ? 'g' : 'ml'}`,
+  };
+
   return(
     <ContainedContainer>
       <Row className={'mb-5'}>
@@ -70,10 +76,11 @@ const ProductIndex : React.FC<reduxStateProps<UnitState>> = ({state}) => {
       <Row className={'flex-grow-1'}>
         <Col sm={7}>
           <ScrollContainer>
-            <UnitTable
-              units={units}
-              selectedUnitId={selectedUnit?.id}
-              setSelectedUnit={setSelectedUnit}
+            <SelectTable<Unit>
+              items={units}
+              selectedItem={selectedUnit}
+              setSelectedItem={setSelectedUnit}
+              columnMappings={tableMappings}
             />
           </ScrollContainer>
         </Col>

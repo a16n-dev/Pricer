@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import Navbar from './components/Navbar';
+import useUserData from './hooks/useUserData';
 import AuthState from './redux/auth/authState';
 import { hydrateAuth } from './redux/auth/hydrateAuth';
 import { fetchProducts } from './redux/product/fetchProducts';
@@ -22,7 +23,7 @@ const App = () => {
 
   const dispatch = useAppDispatch();
 
-
+  const fetchData = useUserData();
 
   useEffect(() => {
     dispatch(hydrateAuth());
@@ -30,8 +31,7 @@ const App = () => {
 
   useEffect(() => {
     if(isAuthenticated){
-      dispatch(fetchProducts());
-      dispatch(fetchUnits());
+      fetchData();
     }
   }, [ isAuthenticated ]);
 

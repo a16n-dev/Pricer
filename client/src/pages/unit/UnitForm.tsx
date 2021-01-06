@@ -187,7 +187,6 @@ const UnitForm: React.FC<UnitFormProps> = ({existingUnit, onSubmit, units, onDel
 
                 <Input
                   name={'UnitRelativeQuantity'}
-                  className={'rounded'}
                   min={0}
                   innerRef={register({
                     required: true,

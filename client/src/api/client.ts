@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { Product, ProductData } from '../models/Product';
+import { Recipe, RecipeData } from '../models/Recipe';
 import { Unit, UnitData } from '../models/Unit';
-
-
 export class ApiClient {
 
   static token?: string
@@ -76,5 +75,35 @@ export class ApiClient {
       data,
     });
     return res.status;
+  }
+
+  static async createRecipe(data: RecipeData) {
+    const res = await axios({
+      baseURL: process.env.REACT_APP_API_URL,
+      headers: {'authorization': this.token},
+      method: 'post',
+      url: 'recipes/new',
+      data,
+    });
+    return res.data as Recipe;
+  }
+  
+  static async fetchRecipes() {
+    const res = await axios({
+      baseURL: process.env.REACT_APP_API_URL,
+      headers: {'authorization': this.token},
+      method: 'get',
+      url: 'recipes',
+    });
+    return res.data as Array<Recipe>;
+  }
+
+  static async seedDB() {
+    return await axios({
+      baseURL: process.env.REACT_APP_API_URL,
+      headers: {'authorization': this.token},
+      method: 'post',
+      url: 'seed',
+    });
   }
 }

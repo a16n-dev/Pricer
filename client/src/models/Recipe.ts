@@ -1,18 +1,20 @@
-import { Dated, Owned, Unique } from "./Common";
+import { Dated, Owned, Unique } from './Common';
 
 export interface RecipeData {
     name: string;
-    servings: number;
-    items: Array<String>;
+    servings?: number;
     itemDetail: Array<RecipeItemDetail>;
-    lastAnalysis: RecipeAnalysis;
+    lastAnalysis?: RecipeAnalysis;
 }
 
 export interface RecipeItemDetail {
     plainText: string;
-    itemText: string;
-    quantity: number;
-    unitId: string; 
+    detail?: {
+        itemText: string;
+        quantity: number;
+        unitId: string;
+        productId: string;
+    }
 }
 
 export interface RecipeAnalysis {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {
   Button,
   Col,
@@ -9,20 +9,31 @@ import {
   Label,
   Row,
 } from 'reactstrap';
-import withReduxState, { reduxStateProps } from '../../components/HOC/withReduxState';
+import withReduxState, {
+  reduxStateProps,
+} from '../../components/HOC/withReduxState';
+import PagedTable from '../../components/PagedTable';
+import { columnMappings } from '../../components/SelectTable';
+import { Product } from '../../models/Product';
 import ProductState from '../../redux/product/productState';
 
-import ProductTable from './ProductTable';
 
-
-const ProductIndex : React.FC<reduxStateProps<ProductState>> = ({state}) => {
-
+const ProductIndex: React.FC<reduxStateProps<ProductState>> = ({ state }) => {
   const [ searchText, setSearchText ] = useState<string>();
-  
-  const products = Object.values(state.products)
-    .filter(p => searchText ? p.name.toLowerCase().includes(searchText.toLowerCase()) : true);
+  const history = useHistory();
+  const products = Object.values(state.products).filter((p) =>
+    searchText ? p.name.toLowerCase().includes(searchText.toLowerCase()) : true,
+  );
 
-  return(
+  const handleClick = (p: Product) => history.push(`/products/view/${p.id}`);
+
+  const map: columnMappings<Product> = {
+    Name: (i) => i.name,
+    Quantity: (i) => `${i.quantity}`,
+    Cost: (i) => `${i.cost}`,
+  };
+
+  return (
     <Container>
       <Row className={'mb-5'}>
         <Col>
@@ -30,7 +41,9 @@ const ProductIndex : React.FC<reduxStateProps<ProductState>> = ({state}) => {
         </Col>
         <Col className={'mt-auto col-md-auto'}>
           <Link to={'/products/new'}>
-            <Button color={'primary'}  className={'ml-auto'}>Add New Product</Button>
+            <Button color={'primary'} className={'ml-auto'}>
+              Add New Product
+            </Button>
           </Link>
         </Col>
       </Row>
@@ -42,7 +55,7 @@ const ProductIndex : React.FC<reduxStateProps<ProductState>> = ({state}) => {
               <Input
                 type={'text'}
                 value={searchText}
-                onChange={e => setSearchText(e.target.value)}
+                onChange={(e) => setSearchText(e.target.value)}
                 className={'mr-2'}
               />
             </div>
@@ -50,11 +63,16 @@ const ProductIndex : React.FC<reduxStateProps<ProductState>> = ({state}) => {
         </Col>
       </Row>
       <Row>
-        <ProductTable products={products}/>
+        <PagedTable<Product>
+          items={products}
+          clickAction={handleClick}
+          columnMappings={map}
+        />
       </Row>
-    </Container>);
-}
-  ;
-
-export default withReduxState<{}, ProductState>(ProductIndex,
-  state => (state.products));
+    </Container>
+  );
+};
+export default withReduxState<{}, ProductState>(
+  ProductIndex,
+  (state) => state.products,
+);

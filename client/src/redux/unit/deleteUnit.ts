@@ -22,6 +22,7 @@ export const deleteUnitReducers = (builder: ActionReducerMapBuilder<UnitState>) 
   builder.addCase(deleteUnit.fulfilled, (state, {payload}) => {
     state.loading = false;
     delete state.units[payload];
+    state.count = Object.keys(state.units).length;
   });
   
   builder.addCase(deleteUnit.rejected, (state, action) => {

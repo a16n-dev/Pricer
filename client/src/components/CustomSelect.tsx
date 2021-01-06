@@ -25,18 +25,18 @@ const errStyles = {
   backgroundSize:' calc(.75em + .375rem) calc(.75em + .375rem)',
 };
 
-const CustomSelect : React.FC<customSelectProps> = ({invalid, ...rest}) => {
+const CustomSelect : React.FC<customSelectProps> = ({invalid, isDisabled, ...rest}) => {
 
   const styles = {
     control: (base: any, state: { selectProps: { menuIsOpen?: any; }; }) => ({
       ...base,
       borderRadius: '.25rem',
-      backgroundColor: white,
+      backgroundColor: !isDisabled ? white : '#e9ecef',
       borderColor: invalid?
         bsBorderError
         :
         (state.selectProps.menuIsOpen ? bsBorderBlue : bsBorderGrey),
-      boxShadow: state.selectProps.menuIsOpen ?
+      boxShadow: isDisabled? 'none' : state.selectProps.menuIsOpen ?
         (invalid? bsBoxShadowError : bsBoxShadowBlue)
         :
         bsBoxShadowGrey,
@@ -76,6 +76,7 @@ const CustomSelect : React.FC<customSelectProps> = ({invalid, ...rest}) => {
       <Select
         styles={styles}
         isClearable
+        isDisabled={isDisabled}
         { ...rest}
       />
     </>
