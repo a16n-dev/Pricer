@@ -1,0 +1,52 @@
+getUnits:
+  handler: unitHandler.getUnits
+  events:
+    - http:
+        path: units
+        method: get
+        cors: true
+        authorizer:
+          type: COGNITO_USER_POOLS
+          authorizerId:
+            Ref: apiAuthorizer
+addUnit:
+  handler: unitHandler.addUnit
+  events:
+    - http:
+        path: units/new
+        method: post
+        cors: true
+        authorizer:
+          type: COGNITO_USER_POOLS
+          authorizerId:
+            Ref: apiAuthorizer
+deleteUnit:
+  handler: unitHandler.deleteUnit
+  events:
+    - http:
+        path: units/{id}
+        method: delete
+        cors: true
+        request:
+          parameters:
+              paths:
+                id: true
+        authorizer:
+          type: COGNITO_USER_POOLS
+          authorizerId:
+            Ref: apiAuthorizer
+updateUnit:
+  handler: unitHandler.updateUnit
+  events:
+    - http:
+        path: units/{id}
+        method: patch
+        cors: true
+        request:
+          parameters:
+              paths:
+                id: true
+        authorizer:
+          type: COGNITO_USER_POOLS
+          authorizerId:
+            Ref: apiAuthorizer

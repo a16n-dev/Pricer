@@ -3,8 +3,7 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import * as AWS from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
-import { Product, ProductData } from "../models/Product";
-import { Unit, UnitData, UnitDTO } from "../models/Unit";
+import { Unit, UnitData } from "../models/Unit";
 
 AWS.config.update({ region: "ap-southeast-2" });
 

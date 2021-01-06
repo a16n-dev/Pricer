@@ -1,0 +1,37 @@
+addRecipe: 
+  handler: recipeHandler.addRecipe
+  events:
+    - http:
+        path: recipes/new
+        method: post
+        cors: true
+        authorizer: 
+          type: COGNITO_USER_POOLS
+          authorizerId: 
+            Ref: apiAuthorizer
+getRecipes: 
+  handler: recipeHandler.getRecipes
+  events:
+    - http:
+        path: recipes
+        method: get
+        cors: true
+        authorizer: 
+          type: COGNITO_USER_POOLS
+          authorizerId: 
+            Ref: apiAuthorizer
+addIngredients: 
+  handler: recipeHandler.addIngredients
+  events:
+    - http:
+        path: recipes/{id}/addIngredients
+        method: post
+        cors: true
+        request:
+          parameters:
+              paths:
+                id: true
+        authorizer: 
+          type: COGNITO_USER_POOLS
+          authorizerId: 
+            Ref: apiAuthorizer

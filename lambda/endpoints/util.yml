@@ -1,0 +1,22 @@
+heartbeat:
+  handler: utilHandler.heartbeat
+  events:
+    - http:
+        path: heartbeat
+        method: get
+        cors: true
+        authorizer:
+          type: COGNITO_USER_POOLS
+          authorizerId:
+            Ref: apiAuthorizer
+seedDB:
+  handler: utilHandler.seedDB
+  events:
+    - http:
+        path: seed
+        method: post
+        cors: true
+        authorizer:
+          type: COGNITO_USER_POOLS
+          authorizerId:
+            Ref: apiAuthorizer
