@@ -1,4 +1,4 @@
-import { Dated, Owned, Unique } from "./Common";
+import { Dated, Owned, Unique } from './Common';
 
 // defined fields
 export interface ProductData {
@@ -7,11 +7,8 @@ export interface ProductData {
     description?: string;
     cost: number;
     quantity: number;
-    units: string;
+    unitId: string;
 }
 
 // Includes defined and generated fields
 export interface Product extends ProductData, Dated, Unique, Owned {}
-
-// DTO for update operations where all fields are optional
-export type ProductDTO = Partial<ProductData>
