@@ -11,7 +11,6 @@ export const login = createAsyncThunk<
   'auth/login',
   async ({username, password}) => {
     if(process.env.NODE_ENV === 'development'){
-      console.log('hello');
       return localStorage.setItem('auth', 'fakeToken');
     } else {
       return Auth.signIn(username, password);

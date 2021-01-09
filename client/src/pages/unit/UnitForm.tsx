@@ -51,14 +51,7 @@ const UnitForm: React.FC<UnitFormProps> = ({existingUnit, onSubmit, units, onDel
     isDisabled: Boolean(u.relativeUnitId) && (u.relativeUnitId === existingUnit?.id),
   });
 
-  const refUnit = units.find(e => {
-
-    console.log(e.id, existingUnit?.relativeUnitId);
-
-    return  e.id === existingUnit?.relativeUnitId;
-  });
-
-  console.log(`ref: ${refUnit}`);
+  const refUnit = units.find(e => e.id === existingUnit?.relativeUnitId);
 
   const defaultValues: any = {
     UnitName: existingUnit?.name,

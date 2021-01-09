@@ -4,6 +4,7 @@ import { addRecipeIngredientsReducers } from './addRecipeIngredients';
 import { createRecipeReducers } from './CreateRecipe';
 import { fetchRecipesReducer } from './fetchRecipes';
 import RecipeState from './recipeState';
+import { saveAnalysisReducers } from './saveAnalysis';
 import { updateRecipeIngredientsReducers } from './updateRecipeIngredients';
 
 export interface ItemDetailPayload {
@@ -43,6 +44,7 @@ const RecipeSlice = createSlice<RecipeState, SliceCaseReducers<RecipeState>>({
     fetchRecipesReducer(builder);
     addRecipeIngredientsReducers(builder);
     updateRecipeIngredientsReducers(builder);
+    saveAnalysisReducers(builder);
   },
 });
 

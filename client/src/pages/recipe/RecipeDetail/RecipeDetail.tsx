@@ -87,7 +87,9 @@ const RecipeDetail: React.FC<reduxStateProps<stateProps>> = ({ state }) => {
   }
 
   if (!state.recipe) {
-    return <Redirect to={'/not-found'} />;
+
+    // return <Redirect to={'/not-found'} />;
+    return <p>hell</p>;
   }
 
   return (
@@ -151,7 +153,7 @@ const RecipeDetail: React.FC<reduxStateProps<stateProps>> = ({ state }) => {
               </Card>
             </Col>
           </Row>
-          <RecipeAnalysisBox analysis={recipe.lastAnalysis} />
+          <RecipeAnalysisBox id={recipe.id} analysis={recipe.lastAnalysis} />
         </Col>
       </Row>
       <AddIngredientsModal

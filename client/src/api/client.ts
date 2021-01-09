@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Tagged } from '../models/Common';
 import { Product, ProductData } from '../models/Product';
-import { Recipe, RecipeData, RecipeItemDetail } from '../models/Recipe';
+import { Recipe, RecipeAnalysis, RecipeData, RecipeItemDetail } from '../models/Recipe';
 import { Unit, UnitData } from '../models/Unit';
 export class ApiClient {
 
@@ -119,6 +119,10 @@ export class ApiClient {
       data: data.data,
     });
     return res.data as Array<RecipeItemDetail>;
+  }
+
+  static async saveRecipeAnalysis(data: Tagged<RecipeAnalysis>){
+    return data.data;
   }
 
   static async seedDB() {
