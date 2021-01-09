@@ -3,7 +3,7 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import * as AWS from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
-import { Recipe, RecipeData, RecipeItemDetail } from "../models/Recipe";
+import { Recipe, RecipeAnalysis, RecipeData, RecipeItemDetail } from "../models/Recipe";
 
 AWS.config.update({ region: "ap-southeast-2" });
 
@@ -219,6 +219,58 @@ export const setIngredients: APIGatewayProxyHandler = (
           statusCode: 201,
           headers,
           body: JSON.stringify(data.Attributes.itemDetail),
+        });
+      }
+    }
+  );
+};
+
+export const setAnalysis: APIGatewayProxyHandler = (
+  event,
+  context,
+  callback
+) => {
+  const data: Array<RecipeAnalysis> = JSON.parse(event.body || "{}");
+  let unitId = event.pathParameters["id"];
+  let userId = event.requestContext.authorizer.claims?.sub;
+
+  if (!userId) {
+    if (offline) {
+      userId = "1";
+    } else {
+      callback(null, {
+        statusCode: 401,
+        headers,
+        body: "No congito user found",
+      });
+    }
+  }
+
+  docClient.update(
+    {
+      TableName: "RECIPES",
+      Key: {
+        id: unitId,
+        userId: userId,
+      },
+      UpdateExpression: "SET lastAnalysis = :a",
+      ExpressionAttributeValues: {
+        ":i": data,
+      }
+    },
+    (err, data) => {
+      if (err) {
+        callback(null, {
+          statusCode: 400,
+          headers,
+          body: JSON.stringify(err),
+        });
+      }
+      if (data) {
+        callback(null, {
+          statusCode: 201,
+          headers,
+          body: 'success',
         });
       }
     }

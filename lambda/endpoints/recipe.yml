@@ -50,3 +50,18 @@ setIngredients:
           type: COGNITO_USER_POOLS
           authorizerId: 
             Ref: apiAuthorizer
+setAnalysis: 
+  handler: recipeHandler.setAnalysis
+  events:
+    - http:
+        path: recipes/{id}/analysis
+        method: post
+        cors: true
+        request:
+          parameters:
+              paths:
+                id: true
+        authorizer: 
+          type: COGNITO_USER_POOLS
+          authorizerId: 
+            Ref: apiAuthorizer
