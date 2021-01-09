@@ -122,7 +122,14 @@ export class ApiClient {
   }
 
   static async saveRecipeAnalysis(data: Tagged<RecipeAnalysis>){
-    return data.data;
+    await axios({
+      baseURL: process.env.REACT_APP_API_URL,
+      headers: {'authorization': this.token},
+      method: 'post',
+      url: `recipes/${data.id}/analysis`,
+      data: data.data,
+    });
+    return data;
   }
 
   static async seedDB() {

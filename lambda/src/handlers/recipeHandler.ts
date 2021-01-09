@@ -255,7 +255,7 @@ export const setAnalysis: APIGatewayProxyHandler = (
       },
       UpdateExpression: "SET lastAnalysis = :a",
       ExpressionAttributeValues: {
-        ":i": data,
+        ":a": data,
       }
     },
     (err, data) => {

@@ -8,11 +8,8 @@ export const saveAnalysis = createAsyncThunk(
   'recipes/saveAnalysis',
   async (data: Tagged<RecipeAnalysis>, thunkAPI): Promise<Tagged<RecipeAnalysis>> => {
   
-    const analysis = await ApiClient.saveRecipeAnalysis(data);
-    return {
-      id: data.id,
-      data: analysis,
-    };
+    const res = await ApiClient.saveRecipeAnalysis(data);
+    return res;
   },
 );
 
