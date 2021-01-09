@@ -35,3 +35,18 @@ addIngredients:
           type: COGNITO_USER_POOLS
           authorizerId: 
             Ref: apiAuthorizer
+setIngredients: 
+  handler: recipeHandler.setIngredients
+  events:
+    - http:
+        path: recipes/{id}/setIngredients
+        method: post
+        cors: true
+        request:
+          parameters:
+              paths:
+                id: true
+        authorizer: 
+          type: COGNITO_USER_POOLS
+          authorizerId: 
+            Ref: apiAuthorizer
