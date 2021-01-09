@@ -22,6 +22,14 @@ export interface RecipeAnalysis {
     cost: number;
     itemsScanned: number;
     itemsSkipped: number;
+    detail: Array<RecipeAnalysisDetail>
+}
+
+export interface RecipeAnalysisDetail {
+    productName: string;
+    productBasePrice: string;
+    recipeQuantity: string;
+    subtotal: number;
 }
 
 export interface Recipe extends RecipeData, Dated, Unique, Owned {}

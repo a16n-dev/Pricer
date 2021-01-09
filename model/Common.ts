@@ -10,3 +10,7 @@ export interface Unique {
 export interface Owned {
     userId: string;
 }
+
+export type Tagged<T> = Unique & {
+    data: T
+}
