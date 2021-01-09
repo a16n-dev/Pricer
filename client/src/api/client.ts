@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { Tagged } from '../models/Common';
 import { Product, ProductData } from '../models/Product';
-import { Recipe, RecipeData } from '../models/Recipe';
+import { Recipe, RecipeData, RecipeItemDetail } from '../models/Recipe';
 import { Unit, UnitData } from '../models/Unit';
 export class ApiClient {
 
@@ -96,6 +97,28 @@ export class ApiClient {
       url: 'recipes',
     });
     return res.data as Array<Recipe>;
+  }
+
+  static async addRecipeIngredients(data: Tagged<Array<RecipeItemDetail>>) {
+    const res = await axios({
+      baseURL: process.env.REACT_APP_API_URL,
+      headers: {'authorization': this.token},
+      method: 'post',
+      url: `recipes/${data.id}/addIngredients`,
+      data: data.data,
+    });
+    return res.data as Array<RecipeItemDetail>;
+  }
+
+  static async setRecipeIngredients(data: Tagged<Array<RecipeItemDetail>>) {
+    const res = await axios({
+      baseURL: process.env.REACT_APP_API_URL,
+      headers: {'authorization': this.token},
+      method: 'post',
+      url: `recipes/${data.id}/setIngredients`,
+      data: data.data,
+    });
+    return res.data as Array<RecipeItemDetail>;
   }
 
   static async seedDB() {

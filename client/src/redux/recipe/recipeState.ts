@@ -5,6 +5,7 @@ type RecipeState = {
   loading: boolean;
   recipes: { [key: string]: Recipe };
   isHydrated: boolean;
+  unsavedChanges: boolean;
 };
 
 export default RecipeState;

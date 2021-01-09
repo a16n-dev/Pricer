@@ -10,50 +10,39 @@ import {
 } from 'reactstrap';
 import { RecipeItemDetail } from '../../../models/Recipe';
 import { addRecipeIngredients } from '../../../redux/recipe/addRecipeIngredients';
+import { updateRecipeIngredients } from '../../../redux/recipe/updateRecipeIngredients';
 import { useAppDispatch } from '../../../redux/store';
 
 interface AddIngredientsModalProps {
   modal: boolean;
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
-  recipeId: string
+  recipeId: string;
+  onSubmit: (items: Array<RecipeItemDetail>) => Promise<any>;
 }
 
 const AddIngredientsModal: React.FC<AddIngredientsModalProps> = ({
   modal,
   setModal,
   recipeId,
+  onSubmit,
 }) => {
 
   const [ ingredients, setIngredients ] = useState<string>('');
   const [ loading, setLoading ] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
 
-  const onSubmit = async () => {
+  const preSubmit = async () => {
     setLoading(true);
 
     const items = ingredients.split('\n');
-    try {
-      const res = await dispatch(addRecipeIngredients({
-        id: recipeId,
-        ingredients: items.map((i: string): RecipeItemDetail => ({plainText: i})),
-      }));
+    const res = await onSubmit(items.map((i: string): RecipeItemDetail => ({plainText: i})));
 
-      if(addRecipeIngredients.fulfilled.match(res)){
-        setIngredients('');
-        setModal(false);
-      }
-    } catch (error) {
-        
-    } finally {
-      setLoading(false);
+    if(updateRecipeIngredients.fulfilled.match(res)){
+      setIngredients('');
+      setModal(false);
     }
-    
-
-    
-
-    // setModal(false);
+    setLoading(false);
   };
-
+    
   const toggle = () => {
     setModal(false);
   };
@@ -75,7 +64,7 @@ const AddIngredientsModal: React.FC<AddIngredientsModalProps> = ({
       <ModalFooter>
         <Button
           color="primary"
-          onClick={onSubmit}
+          onClick={preSubmit}
           disabled={ingredients === '' || loading}
         >
           Confirm

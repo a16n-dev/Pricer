@@ -16,6 +16,7 @@ interface createProductProps {
 
 interface initialState {
   units: Array<Unit>
+
 }
 
 const CreateProduct: React.FC<
@@ -23,6 +24,7 @@ const CreateProduct: React.FC<
   createProductProps &
   reduxStateProps<initialState>
  > = ({confirm, state}) => {
+
    const { enqueueSnackbar } = useSnackbar();
    const history = useHistory();
    const dispatch = useAppDispatch();
@@ -50,9 +52,6 @@ const CreateProduct: React.FC<
        });
        history.push(`/products/view/${res.payload.id}`);
      }
-
-    
-
    };
 
    const onCancel = () => {

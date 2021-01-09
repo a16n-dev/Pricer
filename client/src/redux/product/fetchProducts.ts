@@ -13,11 +13,20 @@ export const fetchProducts = createAsyncThunk(
 
 export const fetchProductsReducers = (builder: ActionReducerMapBuilder<ProductState>) => {
 
+  builder.addCase(fetchProducts.pending, (state, {payload}) => {
+    state.isHydrated = false;
+  });
+
+  builder.addCase(fetchProducts.rejected, (state, {payload}) => {
+    state.isHydrated = true;
+  });
+
   builder.addCase(fetchProducts.fulfilled, (state, {payload}) => {
     state.products = (new Array(...payload)).reduce((map: any, p) => {
       map[p.id] = p;
       return map;
     }, {});
     state.count = Object.keys(state.products).length;
+    state.isHydrated = true;
   });
 };

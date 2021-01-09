@@ -1,23 +1,33 @@
 import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Button, Col, Form, FormGroup, Input, InputGroup, Label } from 'reactstrap';
+import {
+  Button,
+  Col,
+  Form,
+  FormGroup,
+  Input,
+  InputGroup,
+  Label,
+} from 'reactstrap';
 import CustomSelect from '../../../components/CustomSelect';
 import { Product } from '../../../models/Product';
 import { RecipeItemDetail } from '../../../models/Recipe';
 import { Unit } from '../../../models/Unit';
 
 interface RecipeDetailFormFields {
-  itemUnitId: string;
+  itemUnitId: Option<Unit>;
   itemQuantity: string;
   itemText: string;
-  itemProductId: string;
+  itemProductId: Option<Product>;
 }
 
 interface RecipeDetailFormProps {
-  units: Array<Unit>
-  products: Array<Product>
+  units: Array<Unit>;
+  products: Array<Product>;
   disabled?: boolean;
-  existingItem?: RecipeItemDetail
+  existingItem?: RecipeItemDetail;
+  onSubmit: (data: RecipeItemDetail) => void;
+  onDelete: () => void;
 }
 
 interface Option<T> {
@@ -26,13 +36,38 @@ interface Option<T> {
   isDisabled?: boolean;
 }
 
-const RecipeDetailForm: React.FC<RecipeDetailFormProps> = ({units, products, disabled, existingItem}) => {
-  
+const RecipeDetailForm: React.FC<RecipeDetailFormProps> = ({
+  units,
+  products,
+  disabled,
+  existingItem,
+  onSubmit,
+  onDelete,
+}) => {
+  const toOption = <T extends { name: string }>(i: T): Option<T> => ({
+    label: i.name,
+    value: i,
+  });
+
+  const unitDropdownOptions: Array<Option<Unit>> = units.map((u) =>
+    toOption(u),
+  );
+  const productDropdownOptions: Array<Option<Product>> = products.map((u) =>
+    toOption(u),
+  );
+
+  const itemUnitId = unitDropdownOptions.find(
+    (o) => o.value.id === existingItem?.detail?.unitId,
+  );
+  const itemProductId = productDropdownOptions.find(
+    (o) => o.value.id === existingItem?.detail?.productId,
+  );
+
   const defaultValues: Partial<RecipeDetailFormFields> = {
-    itemUnitId: existingItem?.detail?.unitId,
+    itemUnitId,
     itemQuantity: existingItem?.detail?.quantity.toString(),
     itemText: existingItem?.detail?.itemText.toString(),
-    itemProductId: existingItem?.detail?.productId,
+    itemProductId,
   };
 
   const {
@@ -40,7 +75,6 @@ const RecipeDetailForm: React.FC<RecipeDetailFormProps> = ({units, products, dis
     handleSubmit,
     errors,
     control,
-    watch,
     reset,
   } = useForm<RecipeDetailFormFields>({
     defaultValues,
@@ -50,24 +84,30 @@ const RecipeDetailForm: React.FC<RecipeDetailFormProps> = ({units, products, dis
     reset(defaultValues);
   }, [ existingItem ]);
 
-  const preSubmit = (data: RecipeDetailFormFields) => {
-    console.log(data);
+  const preSubmit = ({
+    itemUnitId,
+    itemQuantity,
+    itemText,
+    itemProductId,
+  }: RecipeDetailFormFields) => {
+    if (existingItem) {
+      const detail: RecipeItemDetail = {
+        plainText: existingItem?.plainText,
+        detail: {
+          itemText: itemText,
+          quantity: parseInt(itemQuantity),
+          unitId: itemUnitId.value.id,
+          productId: itemProductId.value.id,
+        },
+      };
+      onSubmit(detail);
+    }
   };
-
-  const toOption = <T extends {name: string},>(i: T): Option<T> => ({
-    label: i.name,
-    value: i,
-  });
-
-  const unitDropdownOptions: Array<Option<Unit>> = units.map(u => toOption(u));
-  const productDropdownOptions: Array<Option<Product>> = products.map(u => toOption(u));
 
   return (
     <Form onSubmit={handleSubmit(preSubmit)}>
-      <FormGroup>
-        {existingItem?.plainText}
-      </FormGroup>
-      <hr/>
+      <FormGroup>{existingItem?.plainText}</FormGroup>
+      <hr />
       <FormGroup>
         <Label>Item Name</Label>
         <Input
@@ -84,7 +124,6 @@ const RecipeDetailForm: React.FC<RecipeDetailFormProps> = ({units, products, dis
         <Col>
           <Label>Quantity</Label>
           <InputGroup>
-
             <Input
               name={'itemQuantity'}
               min={0}
@@ -95,8 +134,9 @@ const RecipeDetailForm: React.FC<RecipeDetailFormProps> = ({units, products, dis
               invalid={Boolean(errors.itemQuantity)}
               disabled={disabled}
             />
-              
+
             <Controller
+              defaultValue={''}
               className={'w-50 ml-3'}
               name="itemUnitId"
               control={control}
@@ -113,19 +153,30 @@ const RecipeDetailForm: React.FC<RecipeDetailFormProps> = ({units, products, dis
       <FormGroup>
         <Label>Product</Label>
         <Controller
-          name="itemUnitId"
+          defaultValue={''}
+          name="itemProductId"
           control={control}
           options={productDropdownOptions}
           as={CustomSelect}
-          invalid={errors.itemUnitId}
+          invalid={errors.itemProductId}
           rules={{ required: true }}
           placeholder={'Select a unit'}
           isDisabled={disabled}
         />
       </FormGroup>
       <FormGroup className={'mb-0'}>
-        <Button disabled={disabled} color={'primary'} type={'submit'}>Submit</Button>
-        <Button disabled={disabled} color={'primary'} outline className={'ml-4'}>Delete</Button>
+        <Button disabled={disabled} color={'primary'} type={'submit'}>
+          Submit
+        </Button>
+        <Button
+          disabled={disabled}
+          color={'primary'}
+          onClick={onDelete}
+          outline
+          className={'ml-4'}
+        >
+          Delete
+        </Button>
       </FormGroup>
     </Form>
   );

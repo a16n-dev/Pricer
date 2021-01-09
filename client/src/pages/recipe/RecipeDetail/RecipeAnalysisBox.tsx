@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, Row } from 'reactstrap';
+import { Button, Card, CardBody, CardHeader, Col, Row } from 'reactstrap';
 import { RecipeAnalysis } from '../../../models/Recipe';
 
 interface RecipeAnalysisBoxProps {
@@ -7,8 +7,7 @@ interface RecipeAnalysisBoxProps {
 }
 
 const RecipeAnalysisBox = ({analysis}: RecipeAnalysisBoxProps) => (
-
-  <Container>
+  <>
     <Row className={'mb-2'}>
       <Col>
         <Card>
@@ -37,7 +36,7 @@ const RecipeAnalysisBox = ({analysis}: RecipeAnalysisBoxProps) => (
           <Button block color={'primary'}>Start Analysis</Button>
         </Col>}
     </Row>
-  </Container>
+  </>
 );
 
 export default RecipeAnalysisBox;

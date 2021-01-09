@@ -1,10 +1,11 @@
 import React from 'react';
 import { FieldValues } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import withReduxState, { reduxStateProps } from '../../components/HOC/withReduxState';
 import { Product } from '../../models/Product';
 import { Unit } from '../../models/Unit';
+import LoadingPage from '../common/LoadingPage';
 import ProductForm from './ProductForm';
 
 interface URLParams {
@@ -13,7 +14,8 @@ interface URLParams {
 
 interface stateProps {
   product: Product;
-  units: Array<Unit>
+  units: Array<Unit>;
+  isHydrated: boolean;
 }
 
 const EditProduct: React.FC<reduxStateProps<stateProps>> = ({state}) => {
@@ -25,8 +27,13 @@ const EditProduct: React.FC<reduxStateProps<stateProps>> = ({state}) => {
     value: u.id,
   }));
 
-  if(!state){
-    history.push('/not-found');
+
+  if(!state.isHydrated){
+    return <LoadingPage/>;
+  }
+
+  if(!state.product){
+    return <Redirect to={'/not-found'}/>;
   }
 
   const onCancel = async () => {
@@ -57,7 +64,9 @@ const EditProduct: React.FC<reduxStateProps<stateProps>> = ({state}) => {
 
 export default withReduxState<{}, stateProps, URLParams>(EditProduct,
   (state, params) => (
-    {product: state.products.products[params.id],
+    {
+      product: state.products.products[params.id],
       units: Object.values(state.units.units),
+      isHydrated: state.products.isHydrated,
     }
   ));

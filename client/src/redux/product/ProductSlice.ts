@@ -12,6 +12,7 @@ const ProductSlice = createSlice<ProductState, SliceCaseReducers<ProductState>>(
     count: 0,
     loading: false,
     products: {},
+    isHydrated: false,
   },
   reducers: {
    

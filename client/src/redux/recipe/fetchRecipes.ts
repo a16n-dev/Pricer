@@ -17,6 +17,10 @@ export const fetchRecipesReducer = (builder: ActionReducerMapBuilder<RecipeState
     state.isHydrated = false;
   });
 
+  builder.addCase(fetchRecipes.rejected, (state, {payload}) => {
+    state.isHydrated = true;
+  });
+
   builder.addCase(fetchRecipes.fulfilled, (state, {payload}) => {
     state.recipes = (new Array(...payload)).reduce((map: any, p) => {
       map[p.id] = p;

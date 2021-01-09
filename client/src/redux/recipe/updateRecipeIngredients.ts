@@ -4,14 +4,13 @@ import { Tagged } from '../../models/Common';
 import { RecipeItemDetail } from '../../models/Recipe';
 import RecipeState from './recipeState';
 
-export const addRecipeIngredients = createAsyncThunk(
-  'recipes/addIngredients',
+export const updateRecipeIngredients = createAsyncThunk(
+  'recipes/updateIngredients',
   async (
     data: Tagged<Array<RecipeItemDetail>>,
     thunkAPI,
   ): Promise<Tagged<Array<RecipeItemDetail>>> => {
-
-    const response = await ApiClient.addRecipeIngredients(data);
+    const response = await ApiClient.setRecipeIngredients(data);
 
     return {
       id: data.id,
@@ -20,14 +19,15 @@ export const addRecipeIngredients = createAsyncThunk(
   },
 );
 
-export const addRecipeIngredientsReducers = (
+export const updateRecipeIngredientsReducers = (
   builder: ActionReducerMapBuilder<RecipeState>,
 ) => {
   builder.addCase(
-    addRecipeIngredients.fulfilled,
+    updateRecipeIngredients.fulfilled,
     (state, { payload: { id, data } }) => {
-      const recipe = state.recipes[id];
-      recipe.itemDetail = data;
+      state.recipes[id].itemDetail = data;
+      state.recipes[id].dateUpdated = Date.now();
+      state.unsavedChanges = false;
     },
   );
 };
