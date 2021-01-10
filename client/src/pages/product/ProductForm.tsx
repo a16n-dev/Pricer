@@ -74,14 +74,13 @@ const ProductForm: React.FC<productFormProps> = ({
             </InputGroupAddon>
             <Input
               name={'productPrice'}
-              type={'number'}
               className={'rounded-right'}
               placeholder={'0.00'}
               min={0}
-              step={0.01}
               innerRef={register({
                 required: true,
                 min: 0,
+                valueAsNumber: true,
               })}
               invalid={Boolean(errors.productPrice)}
             />
@@ -102,6 +101,7 @@ const ProductForm: React.FC<productFormProps> = ({
               innerRef={register({
                 required: true,
                 min: 0,
+                valueAsNumber: true,
               })}
               invalid={Boolean(errors.productQuantity)}
             />
