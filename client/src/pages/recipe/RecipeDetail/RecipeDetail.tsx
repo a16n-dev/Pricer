@@ -1,6 +1,6 @@
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { Button, Card, CardBody, CardHeader, Col, Row } from 'reactstrap';
 import ContainedContainer from '../../../components/ContainedContainer';
 import withReduxState, {
@@ -39,6 +39,7 @@ const RecipeDetail: React.FC<reduxStateProps<stateProps>> = ({ state }) => {
   const [ modal, setModal ] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const snackbar = useSnackbar();
+  const history = useHistory();
   
   const tableMappings: columnMappings<RecipeItemDetail> = {
     Ingredient: (u) => u.plainText,
@@ -87,9 +88,7 @@ const RecipeDetail: React.FC<reduxStateProps<stateProps>> = ({ state }) => {
   }
 
   if (!state.recipe) {
-
-    // return <Redirect to={'/not-found'} />;
-    return <p>hell</p>;
+    return <Redirect to={'/not-found'} />;
   }
 
   return (
@@ -120,6 +119,14 @@ const RecipeDetail: React.FC<reduxStateProps<stateProps>> = ({ state }) => {
             disabled={!state.unsavedChanges}
           >
             Save Changes
+          </Button>
+          <Button
+            color={'primary'}
+            className={'ml-2'}
+            onClick={() => history.push(`${recipe.id}/settings`)}
+            outline
+          >
+            Recipe Settings
           </Button>
         </Col>
       </Row>

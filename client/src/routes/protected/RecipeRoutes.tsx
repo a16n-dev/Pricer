@@ -10,6 +10,9 @@ const LazyRecipeIndex = React.lazy(
 const LazyRecipeAnalysisOverview = React.lazy(
   () => import('../../pages/recipe/RecipeAnalysisOverview'),
 );
+const LazyRecipeSettings = React.lazy(
+  () => import('../../pages/recipe/RecipeSettings'),
+);
 
 const recipeRouteMap: routeMap = {
   routes: [
@@ -26,6 +29,11 @@ const recipeRouteMap: routeMap = {
     {
       path: '/recipes/view/:id/analysis',
       Component: LazyRecipeAnalysisOverview,
+      exact: true,
+    },
+    {
+      path: '/recipes/view/:id/settings',
+      Component: LazyRecipeSettings,
       exact: true,
     },
   ],
