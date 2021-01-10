@@ -1,5 +1,5 @@
 import { useSnackbar } from 'notistack';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Redirect, useHistory } from 'react-router-dom';
 import {
@@ -43,15 +43,23 @@ const names = {
 const RecipeSettings: React.FC<reduxStateProps<stateProps>> = ({
   state: { recipe, isHydrated },
 }) => {
+
   const history = useHistory();
   const dispatch = useAppDispatch();
-  const { register, handleSubmit, errors } = useForm<settingsFormFields>({
+  const { register, handleSubmit, errors, reset } = useForm<settingsFormFields>({
     defaultValues: {
       name: recipe?.name,
       servings: recipe?.servings,
     },
   });
   const snackbar = useSnackbar();
+
+  useEffect(() => {
+    reset({
+      name: recipe?.name,
+      servings: recipe?.servings,
+    });
+  }, [ recipe, reset ]);
 
   const onSubmit = async (data: settingsFormFields) => {
     const updates: Partial<RecipeData> = {};

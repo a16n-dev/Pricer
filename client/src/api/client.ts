@@ -132,6 +132,26 @@ export class ApiClient {
     return data;
   }
 
+  static async updateRecipe(data: Tagged<Partial<RecipeData>>){
+    const res = await axios({
+      baseURL: process.env.REACT_APP_API_URL,
+      headers: {'authorization': this.token},
+      method: 'patch',
+      url: `recipes/${data.id}`,
+      data: data.data,
+    });
+    return res.data as Partial<RecipeData>;
+  }
+
+  static async deleteRecipe(id: string){
+    return await axios({
+      baseURL: process.env.REACT_APP_API_URL,
+      headers: {'authorization': this.token},
+      method: 'delete',
+      url: `recipes/${id}`,
+    });
+  }
+
   static async seedDB() {
     return await axios({
       baseURL: process.env.REACT_APP_API_URL,

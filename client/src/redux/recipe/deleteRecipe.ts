@@ -1,12 +1,13 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
+import { ApiClient } from '../../api/client';
 import RecipeState from './recipeState';
 
 export const deleteRecipe = createAsyncThunk(
   'recipes/delete',
   async (recipeId: string, thunkAPI): Promise<string> => {
   
-    // const recipe = await ApiClient.createRecipe(recipeData);
-    const a = 3;
+    const res = await ApiClient.deleteRecipe(recipeId);
+    
     return recipeId;
   },
 );
