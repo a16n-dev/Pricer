@@ -2,9 +2,11 @@ import { createSlice, PayloadAction, SliceCaseReducers } from '@reduxjs/toolkit'
 import { RecipeItemDetail } from '../../models/Recipe';
 import { addRecipeIngredientsReducers } from './addRecipeIngredients';
 import { createRecipeReducers } from './CreateRecipe';
+import { deleteRecipeReducers } from './deleteRecipe';
 import { fetchRecipesReducer } from './fetchRecipes';
 import RecipeState from './recipeState';
 import { saveAnalysisReducers } from './saveAnalysis';
+import { updateRecipeReducers } from './updateRecipe';
 import { updateRecipeIngredientsReducers } from './updateRecipeIngredients';
 
 export interface ItemDetailPayload {
@@ -45,6 +47,8 @@ const RecipeSlice = createSlice<RecipeState, SliceCaseReducers<RecipeState>>({
     addRecipeIngredientsReducers(builder);
     updateRecipeIngredientsReducers(builder);
     saveAnalysisReducers(builder);
+    deleteRecipeReducers(builder);
+    updateRecipeReducers(builder);
   },
 });
 

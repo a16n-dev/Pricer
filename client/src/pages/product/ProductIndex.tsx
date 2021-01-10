@@ -15,10 +15,15 @@ import withReduxState, {
 import PagedTable from '../../components/PagedTable';
 import { columnMappings } from '../../components/SelectTable';
 import { Product } from '../../models/Product';
+import { Unit } from '../../models/Unit';
 import ProductState from '../../redux/product/productState';
 
+interface stateProps {
+  products: {[key: string]: Product};
+  units: {[key: string]: Unit};
+}
 
-const ProductIndex: React.FC<reduxStateProps<ProductState>> = ({ state }) => {
+const ProductIndex: React.FC<reduxStateProps<stateProps>> = ({ state }) => {
   const [ searchText, setSearchText ] = useState<string>();
   const history = useHistory();
   const products = Object.values(state.products).filter((p) =>
@@ -29,8 +34,11 @@ const ProductIndex: React.FC<reduxStateProps<ProductState>> = ({ state }) => {
 
   const map: columnMappings<Product> = {
     Name: (i) => i.name,
-    Quantity: (i) => `${i.quantity}`,
-    Cost: (i) => `${i.cost}`,
+    Quantity: (i) => {
+      const unit = state.units[i.unitId];
+      return `${i.quantity}${unit.symbol}`;
+    },
+    Cost: (i) => `$${i.cost.toFixed(2)}`,
   };
 
   return (
@@ -72,7 +80,10 @@ const ProductIndex: React.FC<reduxStateProps<ProductState>> = ({ state }) => {
     </Container>
   );
 };
-export default withReduxState<{}, ProductState>(
+export default withReduxState<{}, stateProps>(
   ProductIndex,
-  (state) => state.products,
+  (state) => ({
+    products: state.products.products,
+    units: state.units.units,
+  }),
 );

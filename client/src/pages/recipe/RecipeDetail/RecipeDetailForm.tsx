@@ -160,7 +160,7 @@ const RecipeDetailForm: React.FC<RecipeDetailFormProps> = ({
           as={CustomSelect}
           invalid={errors.itemProductId}
           rules={{ required: true }}
-          placeholder={'Select a unit'}
+          placeholder={'Select a product'}
           isDisabled={disabled}
         />
       </FormGroup>
