@@ -35,6 +35,9 @@ provider:
         - Fn::GetAtt:
           - unitsTable
           - Arn
+        - Fn::GetAtt:
+          - recipesTable
+          - Arn
 
 resources: '${file(resources.yml)}'
 functions:
