@@ -13,13 +13,15 @@ interface PagedTableProps<T> {
   items: Array<T>;
   pageLimit?: number;
   columnMappings: columnMappings<T>;
-  clickAction: (item: T) => void;
+  noLimit?: boolean;
+  clickAction?: (item: T) => void;
 }
 
 const PagedTable = <T,>({
   items,
   pageLimit = 10,
   columnMappings,
+  noLimit,
   clickAction,
 }: PagedTableProps<T>) => {
   const [ page, setPage ] = useState<number>(1);
@@ -39,10 +41,12 @@ const PagedTable = <T,>({
   const startItem = (page - 1) * pageLimit;
   const endItem = Math.min(page * pageLimit, items.length);
 
+  const dispItems = noLimit? items : items.slice(startItem, endItem);
+
   return (
     <Col>
       <Row>
-        <Table hover={true}>
+        <Table hover={Boolean(clickAction)}>
           <thead>
             <tr>
               {Object.keys(columnMappings).map((k, i) => (
@@ -51,8 +55,12 @@ const PagedTable = <T,>({
             </tr>
           </thead>
           <tbody>
-            {items.slice(startItem, endItem).map((u, i) => (
-              <tr key={i} onClick={() => clickAction(u)}>
+            {dispItems.map((u, i) => (
+              <tr key={i} onClick={() => {
+                if(clickAction){
+                  return clickAction(u);
+                }
+              }}>
                 {Object.values(columnMappings).map((v, i) => (
                   <td key={i}>{v(u)}</td>
                 ))}
@@ -61,38 +69,40 @@ const PagedTable = <T,>({
           </tbody>
         </Table>
       </Row>
-      <hr />
-      <Row>
-        <Col>
-          {items.length > 0
-            ? `Showing ${startItem + 1}-${endItem} of ${items.length}`
-            : 'No Results'}
-        </Col>
-        <Col className={'col-md-auto'}>
-          <Pagination aria-label="Page navigation example">
-            <PaginationItem disabled={page === 1}>
-              <PaginationLink first onClick={() => setPage(1)} />
-            </PaginationItem>
-            <PaginationItem disabled={page === 1}>
-              <PaginationLink previous onClick={() => setPage(page - 1)} />
-            </PaginationItem>
-
-            {/* render up to 5 links */}
-            {range.map((n) => (
-              <PaginationItem active={page === n} onClick={() => setPage(n)}>
-                <PaginationLink>{n}</PaginationLink>
+      {!noLimit && <>
+        <hr />
+        <Row>
+          <Col>
+            {items.length > 0
+              ? `Showing ${startItem + 1}-${endItem} of ${items.length}`
+              : 'No Results'}
+          </Col>
+          <Col className={'col-md-auto'}>
+            <Pagination aria-label="Page navigation example">
+              <PaginationItem disabled={page === 1}>
+                <PaginationLink first onClick={() => setPage(1)} />
               </PaginationItem>
-            ))}
+              <PaginationItem disabled={page === 1}>
+                <PaginationLink previous onClick={() => setPage(page - 1)} />
+              </PaginationItem>
 
-            <PaginationItem disabled={page === maxPage || items.length === 0}>
-              <PaginationLink next onClick={() => setPage(page + 1)} />
-            </PaginationItem>
-            <PaginationItem disabled={page === maxPage || items.length === 0}>
-              <PaginationLink last onClick={() => setPage(maxPage)} />
-            </PaginationItem>
-          </Pagination>
-        </Col>
-      </Row>
+              {/* render up to 5 links */}
+              {range.map((n) => (
+                <PaginationItem active={page === n} onClick={() => setPage(n)}>
+                  <PaginationLink>{n}</PaginationLink>
+                </PaginationItem>
+              ))}
+
+              <PaginationItem disabled={page === maxPage || items.length === 0}>
+                <PaginationLink next onClick={() => setPage(page + 1)} />
+              </PaginationItem>
+              <PaginationItem disabled={page === maxPage || items.length === 0}>
+                <PaginationLink last onClick={() => setPage(maxPage)} />
+              </PaginationItem>
+            </Pagination>
+          </Col>
+        </Row>
+      </>}
     </Col>
   );
 };

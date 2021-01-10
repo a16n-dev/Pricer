@@ -7,9 +7,10 @@ import relativeDateString from '../../../util/relativeDateString';
 interface RecipeAnalysisBoxProps {
   id: string;
   analysis?: RecipeAnalysis;
+  hideButton?: boolean;
 }
 
-const RecipeAnalysisBox = ({ analysis, id }: RecipeAnalysisBoxProps) => {
+const RecipeAnalysisBox = ({ analysis, id, hideButton }: RecipeAnalysisBoxProps) => {
   const history = useHistory();
 
   return (
@@ -50,7 +51,7 @@ const RecipeAnalysisBox = ({ analysis, id }: RecipeAnalysisBoxProps) => {
           </Card>
         </Col>
       </Row>
-      <Row>
+      {!hideButton && <Row>
         <Col>
           <Button
             block
@@ -60,7 +61,7 @@ const RecipeAnalysisBox = ({ analysis, id }: RecipeAnalysisBoxProps) => {
             Analyse Recipe
           </Button>
         </Col>
-      </Row>
+      </Row>}
     </>
   );
 };

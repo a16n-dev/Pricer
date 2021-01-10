@@ -16,6 +16,7 @@ import PagedTable from '../../components/PagedTable';
 import { columnMappings } from '../../components/SelectTable';
 import { Recipe } from '../../models/Recipe';
 import RecipeState from '../../redux/recipe/recipeState';
+import relativeDateString from '../../util/relativeDateString';
 import CreateRecipeModal from './RecipeModal';
 
 const RecipeIndex: React.FC<reduxStateProps<RecipeState>> = ({ state }) => {
@@ -31,6 +32,28 @@ const RecipeIndex: React.FC<reduxStateProps<RecipeState>> = ({ state }) => {
 
   const map: columnMappings<Recipe> = {
     Name: (i) => i.name,
+    Ingredients: (i) => (
+      <span>
+        {i.itemDetail.length}
+        {i.lastAnalysis ? (
+          <span>
+            {' '}
+            (
+            <span className={'text-success'}>
+              {i.lastAnalysis.itemsScanned}
+            </span>
+            /
+            <span className={'text-danger'}>{i.lastAnalysis.itemsSkipped}</span>
+            )
+          </span>
+        ) : (
+          ''
+        )}
+      </span>
+    ),
+    'Last Analysis': (i) =>
+      i.lastAnalysis ? relativeDateString(i.lastAnalysis.date) : '',
+    Cost: (i) => (i.lastAnalysis ? `$${i.lastAnalysis.cost.toFixed(2)}` : ''),
   };
 
   return (
@@ -73,7 +96,7 @@ const RecipeIndex: React.FC<reduxStateProps<RecipeState>> = ({ state }) => {
           />
         </Row>
       </Container>
-      <CreateRecipeModal modal={recipeModal} setModal={setRecipeModal}/>
+      <CreateRecipeModal modal={recipeModal} setModal={setRecipeModal} />
     </>
   );
 };

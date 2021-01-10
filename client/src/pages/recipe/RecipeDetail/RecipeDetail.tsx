@@ -96,8 +96,8 @@ const RecipeDetail: React.FC<reduxStateProps<stateProps>> = ({ state }) => {
     <ContainedContainer>
       <Row className={'mb-3'}>
         <Col sm={'auto'}>
-          <h1 className={'display-4 mb-0'}>{recipe.name}</h1>
-          
+          <h3 className={'mb-0 font-weight-light'}>Recipe Definition</h3>
+          <h1 className={'mb-0'}>{state.recipe.name}</h1>
         </Col>
         <Col className={'mt-auto'}>
           <span className={'text-muted'}>
