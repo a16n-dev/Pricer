@@ -8,6 +8,7 @@ export interface ProductData {
     cost: number;
     quantity: number;
     unitId: string;
+    density: number;
 }
 
 // Includes defined and generated fields

@@ -10,7 +10,11 @@ interface RecipeAnalysisBoxProps {
   hideButton?: boolean;
 }
 
-const RecipeAnalysisBox = ({ analysis, id, hideButton }: RecipeAnalysisBoxProps) => {
+const RecipeAnalysisBox = ({
+  analysis,
+  id,
+  hideButton,
+}: RecipeAnalysisBoxProps) => {
   const history = useHistory();
 
   return (
@@ -20,9 +24,7 @@ const RecipeAnalysisBox = ({ analysis, id, hideButton }: RecipeAnalysisBoxProps)
           <Card>
             <CardHeader>
               <Row>
-                <Col>
-              Analysis Summary
-                </Col>
+                <Col>Analysis Summary</Col>
                 <Col className={'ml-auto'} sm={'auto'}>
                   <span className={'text-muted'}>
                     {analysis ? relativeDateString(analysis.date) : 'not run'}
@@ -37,6 +39,15 @@ const RecipeAnalysisBox = ({ analysis, id, hideButton }: RecipeAnalysisBoxProps)
                 <>
                   <span>Total Cost: ${analysis.cost.toFixed(2)}</span>
                   <br />
+                  {analysis.servingInfo ? (
+                    <>
+                      <span>CPS: ${analysis.servingInfo.cost.toFixed(2)}</span>
+                      <br />
+                    </>
+                  ) : (
+                    ''
+                  )}
+
                   <span className={'text-success'}>
                     Items Scanned: {analysis.itemsScanned}
                   </span>
@@ -51,17 +62,19 @@ const RecipeAnalysisBox = ({ analysis, id, hideButton }: RecipeAnalysisBoxProps)
           </Card>
         </Col>
       </Row>
-      {!hideButton && <Row>
-        <Col>
-          <Button
-            block
-            color={'primary'}
-            onClick={() => history.push(`${id}/analysis`)}
-          >
-            Analyse Recipe
-          </Button>
-        </Col>
-      </Row>}
+      {!hideButton && (
+        <Row>
+          <Col>
+            <Button
+              block
+              color={'primary'}
+              onClick={() => history.push(`${id}/analysis`)}
+            >
+              Analyse Recipe
+            </Button>
+          </Col>
+        </Row>
+      )}
     </>
   );
 };

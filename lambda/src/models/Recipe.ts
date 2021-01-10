@@ -23,7 +23,11 @@ export interface RecipeAnalysis {
     itemsScanned: number;
     itemsSkipped: number;
     detail: Array<RecipeAnalysisDetail>
-}
+    servingInfo?: {
+        cost: number;
+        serves: number;
+    }
+};
 
 export interface RecipeAnalysisDetail {
     productName: string;

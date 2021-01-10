@@ -78,7 +78,18 @@ const RecipeAnalysisOverview: React.FC<reduxStateProps<stateProps>> = ({
         res.itemsSkipped++;
       }
     });
+
+
     res.cost = Math.round(res.cost * 1000) / 1000;
+
+    // Add servings info
+    const servings = state.recipe.servings;
+    if(servings){
+      res.servingInfo = {
+        cost: Math.round((res.cost / servings) * 1000) / 1000,
+        serves: servings,
+      };
+    }
 
     // dispatch analysis
     dispatch(
@@ -159,6 +170,16 @@ const RecipeAnalysisOverview: React.FC<reduxStateProps<stateProps>> = ({
                       <h3>${analysis.cost.toFixed(2)}</h3>
                     </td>
                   </tr>
+                  {analysis?.servingInfo && <>
+                    <tr>
+                      <td>
+                        <h3>Cost Per Serve:</h3>
+                      </td>
+                      <td>
+                        <h3>${analysis.servingInfo.cost.toFixed(2)}</h3>
+                      </td>
+                    </tr>
+                  </>}
                 </tbody>
               </table>
             </Col>
