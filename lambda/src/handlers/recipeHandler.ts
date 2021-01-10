@@ -124,7 +124,7 @@ export const addIngredients: APIGatewayProxyHandler = (
   callback
 ) => {
   const data: Array<RecipeItemDetail> = JSON.parse(event.body || "{}");
-  let unitId = event.pathParameters["id"];
+  let recipeId = event.pathParameters["id"];
   let userId = event.requestContext.authorizer.claims?.sub;
 
   if (!userId) {
@@ -143,7 +143,7 @@ export const addIngredients: APIGatewayProxyHandler = (
     {
       TableName: "RECIPES",
       Key: {
-        id: unitId,
+        id: recipeId,
         userId: userId,
       },
       UpdateExpression: "SET itemDetail = list_append(itemDetail, :i)",
@@ -177,7 +177,7 @@ export const setIngredients: APIGatewayProxyHandler = (
   callback
 ) => {
   const data: Array<RecipeItemDetail> = JSON.parse(event.body || "{}");
-  let unitId = event.pathParameters["id"];
+  let recipeId = event.pathParameters["id"];
   let userId = event.requestContext.authorizer.claims?.sub;
 
   if (!userId) {
@@ -196,7 +196,7 @@ export const setIngredients: APIGatewayProxyHandler = (
     {
       TableName: "RECIPES",
       Key: {
-        id: unitId,
+        id: recipeId,
         userId: userId,
       },
       UpdateExpression: "SET itemDetail = :i, dateUpdated = :d",
@@ -231,7 +231,7 @@ export const setAnalysis: APIGatewayProxyHandler = (
   callback
 ) => {
   const data: Array<RecipeAnalysis> = JSON.parse(event.body || "{}");
-  let unitId = event.pathParameters["id"];
+  let recipeId = event.pathParameters["id"];
   let userId = event.requestContext.authorizer.claims?.sub;
 
   if (!userId) {
@@ -250,7 +250,7 @@ export const setAnalysis: APIGatewayProxyHandler = (
     {
       TableName: "RECIPES",
       Key: {
-        id: unitId,
+        id: recipeId,
         userId: userId,
       },
       UpdateExpression: "SET lastAnalysis = :a",
@@ -271,6 +271,119 @@ export const setAnalysis: APIGatewayProxyHandler = (
           statusCode: 201,
           headers,
           body: 'success',
+        });
+      }
+    }
+  );
+};
+
+
+export const updateRecipe: APIGatewayProxyHandler = (
+  event,
+  context,
+  callback
+) => {
+  const data: Partial<RecipeData> = JSON.parse(event.body || "{}");
+  let recipeId = event.pathParameters["id"];
+  let userId = event.requestContext.authorizer.claims?.sub;
+
+  if (!userId) {
+    if (offline) {
+      userId = "1";
+    } else {
+      callback(null, {
+        statusCode: 401,
+        headers,
+        body: "No congito user found",
+      });
+    }
+  }
+
+  const exp = ['#d = :d']
+  const expAttNames = {'#d': 'dateUpdated'}
+  const expAttValues = {':d': Date.now()}
+
+  if(data.name) {
+    exp.push('#n = :n');
+    expAttNames['#n'] = 'name'
+    expAttValues[':n'] = data.name
+  }
+  if(data.servings) {
+    exp.push('servings = :s');
+    expAttValues[':s'] = data.servings
+  }
+  docClient.update(
+    {
+      TableName: "RECIPES",
+      Key: {
+        id: recipeId,
+        userId: userId,
+      },
+      UpdateExpression: `SET ${exp.join(', ')}`,
+      ExpressionAttributeNames: expAttNames,
+      ExpressionAttributeValues: expAttValues,
+      ReturnValues: 'UPDATED_NEW'
+    },
+    (err, data) => {
+      if (err) {
+        callback(null, {
+          statusCode: 400,
+          headers,
+          body: JSON.stringify(err),
+        });
+      }
+      if (data) {
+        callback(null, {
+          statusCode: 201,
+          headers,
+          body: JSON.stringify(data.Attributes),
+        });
+      }
+    }
+  );
+};
+
+export const deleteRecipe: APIGatewayProxyHandler = (
+  event,
+  context,
+  callback
+) => {
+  let recipeId = event.pathParameters["id"];
+  let userId = event.requestContext.authorizer.claims?.sub;
+
+  if (!userId) {
+    if (offline) {
+      userId = "1";
+    } else {
+      callback(null, {
+        statusCode: 401,
+        headers,
+        body: "No congito user found",
+      });
+    }
+  }
+
+  docClient.delete(
+    {
+      TableName: "RECIPES",
+      Key: {
+        userId,
+        id: recipeId,
+      },
+    },
+    (err, data) => {
+      if (err) {
+        callback(null, {
+          statusCode: 400,
+          headers,
+          body: JSON.stringify(err),
+        });
+      }
+      if (data) {
+        callback(null, {
+          statusCode: 200,
+          headers,
+          body: "successfully deleted recipe",
         });
       }
     }

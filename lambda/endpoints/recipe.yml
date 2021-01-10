@@ -65,3 +65,33 @@ setAnalysis:
           type: COGNITO_USER_POOLS
           authorizerId: 
             Ref: apiAuthorizer
+updateRecipe: 
+  handler: recipeHandler.updateRecipe
+  events:
+    - http:
+        path: recipes/{id}
+        method: patch
+        cors: true
+        request:
+          parameters:
+              paths:
+                id: true
+        authorizer: 
+          type: COGNITO_USER_POOLS
+          authorizerId: 
+            Ref: apiAuthorizer
+deleteRecipe: 
+  handler: recipeHandler.deleteRecipe
+  events:
+    - http:
+        path: recipes/{id}
+        method: delete
+        cors: true
+        request:
+          parameters:
+              paths:
+                id: true
+        authorizer: 
+          type: COGNITO_USER_POOLS
+          authorizerId: 
+            Ref: apiAuthorizer
