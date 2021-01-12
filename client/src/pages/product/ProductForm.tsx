@@ -35,6 +35,7 @@ const ProductForm: React.FC<productFormProps> = ({
       productUnit: units.find((u) => u.value === initialState?.unitId),
       productBrand: initialState?.brand,
       productDescription: initialState?.description,
+      productDensity: initialState?.density ? initialState.density : 1,
     },
   });
 
@@ -123,11 +124,35 @@ const ProductForm: React.FC<productFormProps> = ({
           </InputGroup>
         </Col>
       </FormGroup>
+      <FormGroup row>
+        <Col sm={4}>
+          <Label>
+            Density
+          </Label>
+          <InputGroup>
+            <Input
+              name={'productDensity'}
+              className={'rounded-right'}
+              min={0}
+              innerRef={register({
+                required: true,
+                min: 0,
+                valueAsNumber: true,
+              })}
+              invalid={Boolean(errors.productDensity)}
+            />
+            <InputGroupAddon addonType="append">
+              <InputGroupText>g/ml</InputGroupText>
+            </InputGroupAddon>
+          </InputGroup>
+          
+        </Col>
+      </FormGroup>
       <hr />
       <FormGroup row>
         <Col sm={4}>
           <Label>
-            Brand{' '}
+            Brand
             <span className={'text-muted ml-2'}>
               <small>Optional</small>
             </span>
