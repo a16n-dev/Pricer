@@ -36,6 +36,17 @@ export class ApiClient {
     return res.data as Product;
   }
 
+  static async updateProduct(data: Tagged<ProductData>) {
+    const res = await axios({
+      baseURL: process.env.REACT_APP_API_URL,
+      headers: {'authorization': this.token},
+      method: 'patch',
+      url: `products/${data.id}`,
+      data: data.data,
+    });
+    return res.data as Product;
+  }
+
   static async createUnit(data: UnitData) {
     const res = await axios({
       baseURL: process.env.REACT_APP_API_URL,
