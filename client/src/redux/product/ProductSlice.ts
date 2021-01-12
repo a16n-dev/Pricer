@@ -5,6 +5,7 @@ import {
 import ProductState from './productState';
 import { fetchProductsReducers } from './fetchProducts';
 import { createProductReducers } from './createProduct';
+import { updateProductReducers } from './updateProduct';
 
 const ProductSlice = createSlice<ProductState, SliceCaseReducers<ProductState>>({
   name: 'products',
@@ -20,6 +21,7 @@ const ProductSlice = createSlice<ProductState, SliceCaseReducers<ProductState>>(
   extraReducers: builder => {
     fetchProductsReducers(builder);
     createProductReducers(builder);
+    updateProductReducers(builder);
   },
 });
   

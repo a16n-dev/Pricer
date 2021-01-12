@@ -15,6 +15,7 @@ import {
 import { Unit } from '../../models/Unit';
 import { saveAnalysis } from '../../redux/recipe/saveAnalysis';
 import { useAppDispatch } from '../../redux/store';
+import { calculateUnitPrice } from '../../util/calculateUnitPrice';
 import LoadingPage from '../common/LoadingPage';
 import RecipeAnalysisBox from './RecipeDetail/RecipeAnalysisBox';
 
@@ -53,10 +54,7 @@ const RecipeAnalysisOverview: React.FC<reduxStateProps<stateProps>> = ({
         const unit = state.units[i.detail.unitId];
         const productUnit = state.units[product.unitId];
 
-        const productBase = productUnit.quantity * product.quantity;
-        const itemBase = unit.quantity * i.detail.quantity;
-
-        const price = (itemBase / productBase) * product.cost;
+        const price = calculateUnitPrice(product, productUnit, unit, i.detail.quantity);
 
         if (product && unit && productUnit) {
           const detail: RecipeAnalysisDetail = {
