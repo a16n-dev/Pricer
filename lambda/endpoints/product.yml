@@ -20,3 +20,18 @@ addProduct:
           type: COGNITO_USER_POOLS
           authorizerId:
             Ref: apiAuthorizer
+updateProduct:
+  handler: productHandler.updateProduct
+  events:
+    - http:
+        path: products/{id}
+        method: patch
+        cors: true
+        request:
+          parameters:
+              paths:
+                id: true
+        authorizer:
+          type: COGNITO_USER_POOLS
+          authorizerId:
+            Ref: apiAuthorizer
