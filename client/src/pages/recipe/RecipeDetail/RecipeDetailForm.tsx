@@ -16,7 +16,7 @@ import { Unit } from '../../../models/Unit';
 
 interface RecipeDetailFormFields {
   itemUnitId: Option<Unit>;
-  itemQuantity: string;
+  itemQuantity: number;
   itemText: string;
   itemProductId: Option<Product>;
 }
@@ -95,7 +95,7 @@ const RecipeDetailForm: React.FC<RecipeDetailFormProps> = ({
         plainText: existingItem?.plainText,
         detail: {
           itemText: itemText,
-          quantity: parseInt(itemQuantity),
+          quantity: itemQuantity,
           unitId: itemUnitId.value.id,
           productId: itemProductId.value.id,
         },
@@ -130,6 +130,7 @@ const RecipeDetailForm: React.FC<RecipeDetailFormProps> = ({
               innerRef={register({
                 required: true,
                 min: 0,
+                valueAsNumber: true,
               })}
               invalid={Boolean(errors.itemQuantity)}
               disabled={disabled}
