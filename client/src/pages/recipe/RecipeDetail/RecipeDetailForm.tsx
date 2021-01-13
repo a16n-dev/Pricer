@@ -65,7 +65,7 @@ const RecipeDetailForm: React.FC<RecipeDetailFormProps> = ({
 
   const defaultValues: Partial<RecipeDetailFormFields> = {
     itemUnitId,
-    itemQuantity: existingItem?.detail?.quantity.toString(),
+    itemQuantity: existingItem?.detail?.quantity,
     itemText: existingItem?.detail?.itemText.toString(),
     itemProductId,
   };
