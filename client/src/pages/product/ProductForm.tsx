@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Controller, FieldValues, useForm } from 'react-hook-form';
 import {
   Button,
@@ -13,6 +13,7 @@ import {
 } from 'reactstrap';
 import CustomSelect from '../../components/CustomSelect';
 import { ProductData } from '../../models/Product';
+import DensityCalculationModal from './DensityCalculationModal';
 
 interface productFormProps {
   onSubmit: (data: FieldValues) => void;
@@ -27,7 +28,9 @@ const ProductForm: React.FC<productFormProps> = ({
   units,
   initialState,
 }) => {
-  const { register, handleSubmit, errors, control } = useForm({
+  const [ modal, setModal ] = useState<boolean>(false);
+
+  const { register, handleSubmit, errors, control, setValue } = useForm({
     defaultValues: {
       productName: initialState?.name,
       productPrice: initialState?.cost,
@@ -49,142 +52,158 @@ const ProductForm: React.FC<productFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(preSubmit)}>
-      <FormGroup row>
-        <Col sm={6}>
-          <Label>Product Name</Label>
-          <Input
-            name="productName"
-            placeholder="Enter a name for the product"
-            innerRef={register({
-              required: true,
-            })}
-            invalid={Boolean(errors.productName)}
-          />
-          {errors.productName && (
-            <FormFeedback>Please enter a product name</FormFeedback>
-          )}
-        </Col>
-      </FormGroup>
-      <FormGroup row>
-        <Col sm={2}>
-          <Label>Cost</Label>
-          <InputGroup>
-            <InputGroupAddon addonType="prepend">
-              <InputGroupText>$</InputGroupText>
-            </InputGroupAddon>
+    <>
+      <form onSubmit={handleSubmit(preSubmit)}>
+        <FormGroup row>
+          <Col sm={6}>
+            <Label>Product Name</Label>
             <Input
-              name={'productPrice'}
-              className={'rounded-right'}
-              placeholder={'0.00'}
-              min={0}
+              name="productName"
+              placeholder="Enter a name for the product"
               innerRef={register({
                 required: true,
-                min: 0,
-                valueAsNumber: true,
               })}
-              invalid={Boolean(errors.productPrice)}
+              invalid={Boolean(errors.productName)}
             />
-            {errors.productPrice && (
-              <FormFeedback>Please enter a product price</FormFeedback>
+            {errors.productName && (
+              <FormFeedback>Please enter a product name</FormFeedback>
             )}
-          </InputGroup>
-        </Col>
-      </FormGroup>
-      <FormGroup row>
-        <Col sm={5}>
-          <Label>Quantity</Label>
-          <InputGroup>
-            <Input
-              name={'productQuantity'}
-              className={'rounded'}
-              min={0}
-              innerRef={register({
-                required: true,
-                min: 0,
-                valueAsNumber: true,
-              })}
-              invalid={Boolean(errors.productQuantity)}
-            />
+          </Col>
+        </FormGroup>
+        <FormGroup row>
+          <Col sm={2}>
+            <Label>Cost</Label>
+            <InputGroup>
+              <InputGroupAddon addonType="prepend">
+                <InputGroupText>$</InputGroupText>
+              </InputGroupAddon>
+              <Input
+                name={'productPrice'}
+                className={'rounded-right'}
+                placeholder={'0.00'}
+                min={0}
+                innerRef={register({
+                  required: true,
+                  min: 0,
+                  valueAsNumber: true,
+                })}
+                invalid={Boolean(errors.productPrice)}
+              />
+              {errors.productPrice && (
+                <FormFeedback>Please enter a product price</FormFeedback>
+              )}
+            </InputGroup>
+          </Col>
+        </FormGroup>
+        <FormGroup row>
+          <Col sm={5}>
+            <Label>Quantity</Label>
+            <InputGroup>
+              <Input
+                name={'productQuantity'}
+                className={'rounded'}
+                min={0}
+                innerRef={register({
+                  required: true,
+                  min: 0,
+                  valueAsNumber: true,
+                })}
+                invalid={Boolean(errors.productQuantity)}
+              />
 
-            <Controller
-              className={'w-75 ml-3'}
-              name="productUnit"
-              control={control}
-              options={units}
-              as={CustomSelect}
-              invalid={errors.productUnit}
-              rules={{ required: true }}
-              placeholder={'Select a unit'}
-            />
+              <Controller
+                className={'w-75 ml-3'}
+                name="productUnit"
+                control={control}
+                options={units}
+                as={CustomSelect}
+                invalid={errors.productUnit}
+                rules={{ required: true }}
+                placeholder={'Select a unit'}
+              />
 
-            {errors.productQuantity && (
-              <FormFeedback>Please enter a valid quantity</FormFeedback>
-            )}
-          </InputGroup>
-        </Col>
-      </FormGroup>
-      <FormGroup row>
-        <Col sm={4}>
-          <Label>
-            Density
-          </Label>
-          <InputGroup>
+              {errors.productQuantity && (
+                <FormFeedback>Please enter a valid quantity</FormFeedback>
+              )}
+            </InputGroup>
+          </Col>
+        </FormGroup>
+        <FormGroup row>
+          <Col sm={4}>
+            <Label>Density</Label>
+            <InputGroup>
+              <Input
+                name={'productDensity'}
+                className={'rounded-left'}
+                min={0}
+                innerRef={register({
+                  required: true,
+                  min: 0,
+                  valueAsNumber: true,
+                })}
+                invalid={Boolean(errors.productDensity)}
+              />
+              <InputGroupAddon addonType="append">
+                <InputGroupText>g/ml</InputGroupText>
+              </InputGroupAddon>
+            </InputGroup>
+          </Col>
+          <Col className={'mt-auto'}>
+            <Button color={'primary'} outline onClick={() => setModal(true)}>
+              Calculate Density
+            </Button>
+          </Col>
+        </FormGroup>
+        <hr />
+        <FormGroup row>
+          <Col sm={4}>
+            <Label>
+              Brand
+              <span className={'text-muted ml-2'}>
+                <small>Optional</small>
+              </span>
+            </Label>
+            <Input name={'productBrand'} innerRef={register} />
+          </Col>
+        </FormGroup>
+        <FormGroup row>
+          <Col sm={6}>
+            <Label>
+              Description{' '}
+              <span className={'text-muted ml-2'}>
+                <small>Optional</small>
+              </span>
+            </Label>
             <Input
-              name={'productDensity'}
-              className={'rounded-right'}
-              min={0}
-              innerRef={register({
-                required: true,
-                min: 0,
-                valueAsNumber: true,
-              })}
-              invalid={Boolean(errors.productDensity)}
+              name={'productDescription'}
+              type={'textarea'}
+              innerRef={register}
             />
-            <InputGroupAddon addonType="append">
-              <InputGroupText>g/ml</InputGroupText>
-            </InputGroupAddon>
-          </InputGroup>
-          
-        </Col>
-      </FormGroup>
-      <hr />
-      <FormGroup row>
-        <Col sm={4}>
-          <Label>
-            Brand
-            <span className={'text-muted ml-2'}>
-              <small>Optional</small>
-            </span>
-          </Label>
-          <Input name={'productBrand'} innerRef={register} />
-        </Col>
-      </FormGroup>
-      <FormGroup row>
-        <Col sm={6}>
-          <Label>
-            Description{' '}
-            <span className={'text-muted ml-2'}>
-              <small>Optional</small>
-            </span>
-          </Label>
-          <Input
-            name={'productDescription'}
-            type={'textarea'}
-            innerRef={register}
-          />
-        </Col>
-      </FormGroup>
-      <hr />
-      <FormGroup>
-        <Button type="submit" color={'primary'}>
-          Save
-        </Button>
-        <Button onClick={onCancel} color={'primary'} className={'ml-4'} outline>
-          Cancel
-        </Button>
-      </FormGroup>
-    </form>
+          </Col>
+        </FormGroup>
+        <hr />
+        <FormGroup>
+          <Button type="submit" color={'primary'}>
+            Save
+          </Button>
+          <Button
+            onClick={onCancel}
+            color={'primary'}
+            className={'ml-4'}
+            outline
+          >
+            Cancel
+          </Button>
+        </FormGroup>
+      </form>
+      <DensityCalculationModal
+        modal={modal}
+        setModal={setModal}
+        onSave={(v) => {
+          setValue('productDensity', v);
+        }}
+      />
+    </>
   );
 };
 

@@ -14,7 +14,7 @@ const bsBoxShadowError = 'inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px #dc3545;';
 
 
 interface customSelectProps extends Props {
-    invalid: boolean;
+    invalid?: boolean;
 }
 
 const errStyles = {
