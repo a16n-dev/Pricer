@@ -26,8 +26,6 @@ export const calculateUnitPrice = (
     break;
   }
 
-  console.log(densityMultiplier);
-
   const price = (itemBase / productBase) * densityMultiplier * product.cost;
   return price;
 };

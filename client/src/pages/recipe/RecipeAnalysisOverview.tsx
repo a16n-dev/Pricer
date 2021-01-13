@@ -64,8 +64,6 @@ const RecipeAnalysisOverview: React.FC<reduxStateProps<stateProps>> = ({
             subtotal: Math.round(price * 1000) / 1000,
           };
 
-          console.log(`Detail for ${i.plainText}`, detail);
-
           res.itemsScanned++;
           res.cost += price;
           res.detail.push(detail);

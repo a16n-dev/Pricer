@@ -60,7 +60,7 @@ const DensityCalculationModal: React.FC<modalProps> = ({
   if (weightUnit && volumeUnit) {
     const v = parseFloat(volume);
     const w = parseFloat(weight);
-    if (v & w) {
+    if (v && w) {
       density = CalculateDensity(
         units[weightUnit.value].quantity,
         w,
