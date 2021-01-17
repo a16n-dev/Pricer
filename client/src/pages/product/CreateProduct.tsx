@@ -46,6 +46,7 @@ const CreateProduct: React.FC<
        quantity: productQuantity,
        unitId: productUnit.value,
        density: productDensity,
+       units: [],
      }));
 
      if(createProduct.fulfilled.match(res)){

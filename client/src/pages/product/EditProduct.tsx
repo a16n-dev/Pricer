@@ -64,6 +64,7 @@ const EditProduct: React.FC<reduxStateProps<stateProps>> = ({state}) => {
         quantity: productQuantity,
         unitId: productUnit.value,
         density: productDensity,
+        units: [],
       },
     }));
 

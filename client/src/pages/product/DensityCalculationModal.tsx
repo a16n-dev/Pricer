@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import Select from 'react-select';
 import {
   Button,
   Col,
-  Dropdown,
-  Input,
   Modal,
   ModalBody,
   ModalFooter,
@@ -13,7 +10,6 @@ import {
   Row,
 } from 'reactstrap';
 import CustomSelect from '../../components/CustomSelect';
-import { Unit } from '../../models/Unit';
 import { RootState } from '../../redux/store';
 import CalculateDensity from '../../util/calculateDensity';
 
