@@ -20,54 +20,87 @@ const headers = {
   "Access-Control-Allow-Credentials": true,
 };
 
-export const AddProductUnitField: APIGatewayProxyHandler = (event, context, callback) => {
+export const AddProductUnitField: APIGatewayProxyHandler = (
+  event,
+  context,
+  callback
+) => {
 
-  if (!offline) {
-    callback(null, {
-      statusCode: 400,
-      body: "Migration lambda functions must be run directly",
-    });
+  let userId = event.requestContext.authorizer.claims?.sub;
+
+  if (!userId) {
+    if (offline) {
+      userId = "1";
+    } else {
+      callback(null, {
+        statusCode: 401,
+        headers,
+        body: "No congito user found",
+      });
+    }
   }
 
-    docClient.scan(
-      {
-        TableName: "PRODUCTS",
-      },
-      (err, data) => {
-        const items: Array<Product> = data.Items as any
+  docClient.scan(
+    {
+      TableName: "PRODUCTS",
+    },
+    (err, data) => {
 
-        //Process data here
-        const res = items.map((i) => {
-
-            const item =  {
-                ...i,
-                units: []
-            }
-
-            const req = {
-                PutRequest: {
-                    Item: item
-                }
-            }
-            return req
-        })
-
-        docClient.batchWrite({
-            RequestItems: {
-                'PRODUCTS': res
-            },
-            ReturnItemCollectionMetrics: 'SIZE'
-        }, (err, data) => {
-          if(err){
-            callback(err)
-          }
-          if(data){
-            callback(null, {
-              statusCode: 200,
-              body: JSON.stringify(data.ItemCollectionMetrics)
-            })
-          }
-        })
+      if(err){
+        callback(err)
       }
-    );
+
+      const items: Array<Product> = data.Items as any;
+
+      //Process data here
+      const res = items.map((i) => {
+        i['units'] = []
+
+        const req = {
+          PutRequest: {
+            Item: i,
+          },
+        };
+        return req;
+      });
+
+      //Consolidate items into batches of 25
+      const consolodated = []
+
+      res.forEach((v, i) => {
+        consolodated[Math.floor(i/25)] = [...(consolodated[Math.floor(i/25)] || []), v]
+      })
+
+      let opsNum = consolodated.length
+      console.log(opsNum);
+
+      consolodated.forEach(v => {
+        docClient.batchWrite(
+          {
+            RequestItems: {
+              PRODUCTS: res,
+            },
+            ReturnItemCollectionMetrics: "SIZE",
+          },
+          (err, data) => {
+            if (err) {
+              callback(err);
+            }
+            if (data) {
+              opsNum--;
+              if(opsNum === 0){
+                //if all operations have completed then return
+                callback(null, {
+                  statusCode: 200,
+                  body: 'Success',
+                });
+              }
+              
+            }
+          }
+        );
+      })
+
+    }
+  );
 };
