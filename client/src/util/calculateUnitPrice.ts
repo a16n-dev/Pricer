@@ -7,7 +7,7 @@ export const calculateUnitPrice = (
   targetUnit: Unit,
   quantity: number,
 ): number => {
-  const productBase = baseUnit.quantity * product.quantity;
+  const productBase = baseUnit.quantity * product?.quantity;
   const itemBase = targetUnit.quantity * quantity;
   
   // either -1, 0 or 1

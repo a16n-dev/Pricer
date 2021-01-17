@@ -51,12 +51,26 @@ const RecipeAnalysisOverview: React.FC<reduxStateProps<stateProps>> = ({
     state.recipe.itemDetail.forEach((i) => {
       if (i.detail) {
         const product = state.products[i.detail.productId];
-        const unit = state.units[i.detail.unitId];
-        const productUnit = state.units[product.unitId];
 
-        const price = calculateUnitPrice(product, productUnit, unit, i.detail.quantity);
+        // Construct full unit list
+        const productUnitMap: {[key: string]: Unit} = product.units.reduce((map: any, p) => {
+          map[p.id] = p;
+          return map;
+        }, {});
 
-        if (product && unit && productUnit) {
+        const unitList = {...state.units, ...productUnitMap };
+
+        const unit = unitList[i.detail.unitId];
+        const productUnit = unitList[product.unitId];
+
+        let price;
+        try {
+          price = calculateUnitPrice(product, productUnit, unit, i.detail.quantity);
+        } catch (error) {
+          
+        }
+
+        if (product && unit && productUnit && price) {
           const detail: RecipeAnalysisDetail = {
             productName: product.name,
             productBasePrice: `$${product.cost} per ${product.quantity} ${productUnit.symbol}`,
