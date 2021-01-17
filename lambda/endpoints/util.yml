@@ -20,3 +20,14 @@ seedDB:
           type: COGNITO_USER_POOLS
           authorizerId:
             Ref: apiAuthorizer
+migrate:
+  handler: migrations/AddProductUnitField.AddProductUnitField
+  events:
+    - http:
+        path: migrate
+        method: post
+        cors: true
+        authorizer:
+          type: COGNITO_USER_POOLS
+          authorizerId:
+            Ref: apiAuthorizer
