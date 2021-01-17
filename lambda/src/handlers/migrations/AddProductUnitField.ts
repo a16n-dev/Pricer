@@ -26,18 +26,8 @@ export const AddProductUnitField: APIGatewayProxyHandler = (
   callback
 ) => {
 
-  let userId = event.requestContext.authorizer.claims?.sub;
-
-  if (!userId) {
-    if (offline) {
-      userId = "1";
-    } else {
-      callback(null, {
-        statusCode: 401,
-        headers,
-        body: "No congito user found",
-      });
-    }
+  if(event.requestContext){
+    callback('Please invoke the function directly');
   }
 
   docClient.scan(
@@ -74,11 +64,11 @@ export const AddProductUnitField: APIGatewayProxyHandler = (
       let opsNum = consolodated.length
       console.log(opsNum);
 
-      consolodated.forEach(v => {
+      consolodated.forEach(batch => {
         docClient.batchWrite(
           {
             RequestItems: {
-              PRODUCTS: res,
+              PRODUCTS: batch,
             },
             ReturnItemCollectionMetrics: "SIZE",
           },
