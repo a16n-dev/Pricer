@@ -72,7 +72,19 @@ export const seedDB: APIGatewayProxyHandler = (event, context, callback) => {
       cost: 1,
       quantity: 200,
       unitId: "1",
-      density: 1
+      density: 1,
+      units: [
+        {
+          symbol: 'customUnit',
+          dateCreated: 1,
+          quantity: 5,
+          name: 'customUnit',
+          id: 'FLOUR-0',
+          userId: '1',
+          dateUpdated: 1,
+          base: 1
+        }
+      ],
     },
     {
       id: '1',
@@ -80,7 +92,8 @@ export const seedDB: APIGatewayProxyHandler = (event, context, callback) => {
       cost: 6.5,
       quantity: 2,
       unitId: "2",
-      density: 1
+      density: 1,
+      units: [],
     },
   ];
   let total = units.length + products.length

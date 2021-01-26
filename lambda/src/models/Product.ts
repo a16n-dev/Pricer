@@ -1,5 +1,5 @@
 import { Dated, Owned, Unique } from './Common';
-
+import {Unit} from './Unit';
 // defined fields
 export interface ProductData {
     name: string;
@@ -9,6 +9,7 @@ export interface ProductData {
     quantity: number;
     unitId: string;
     density: number;
+    units: Array<Unit>;
 }
 
 // Includes defined and generated fields
