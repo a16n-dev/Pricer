@@ -35,7 +35,11 @@ const ProductIndex: React.FC<reduxStateProps<stateProps>> = ({ state }) => {
   const map: columnMappings<Product> = {
     Name: (i) => i.name,
     Quantity: (i) => {
-      const unit = state.units[i.unitId];
+      const fullUnits = {...state.units, ...i.units.reduce((map: any, p) => {
+        map[p.id] = p;
+        return map;
+      }, {})};
+      const unit = fullUnits[i.unitId];
       return `${i.quantity} ${unit.symbol}`;
     },
     Cost: (i) => `$${i.cost.toFixed(2)}`,

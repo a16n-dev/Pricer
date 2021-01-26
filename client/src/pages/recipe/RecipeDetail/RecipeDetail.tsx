@@ -45,7 +45,14 @@ const RecipeDetail: React.FC<reduxStateProps<stateProps>> = ({ state }) => {
     Ingredient: (u) => u.plainText,
     'Item Name': (u) => u.detail?.itemText || '',
     Quantity: (u) =>
-      u.detail ? `${u.detail.quantity}${units[u.detail.unitId]?.symbol}` : '',
+      u.detail ? `${u.detail.quantity}${
+        {...units,
+          ...products[u.detail.productId]?.units.reduce(
+            (map, obj) => (map[obj.id] = obj, map),
+         {} as {[key: string]: Unit},
+          ),
+        }[u.detail.unitId]?.symbol
+      }` : '',
     Product: (u) => (u.detail ? `${products[u.detail.productId]?.name}` : ''),
   };
 

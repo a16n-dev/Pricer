@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
   Button,
@@ -36,6 +36,11 @@ interface Option<T> {
   isDisabled?: boolean;
 }
 
+const toOption = <T extends { name: string }>(i: T): Option<T> => ({
+  label: i.name,
+  value: i,
+});
+
 const RecipeDetailForm: React.FC<RecipeDetailFormProps> = ({
   units,
   products,
@@ -44,6 +49,8 @@ const RecipeDetailForm: React.FC<RecipeDetailFormProps> = ({
   onSubmit,
   onDelete,
 }) => {
+
+  // ====================================================================================
   const {
     register,
     handleSubmit,
@@ -51,42 +58,50 @@ const RecipeDetailForm: React.FC<RecipeDetailFormProps> = ({
     control,
     reset,
     watch,
+    setValue,
   } = useForm<RecipeDetailFormFields>();
 
-  const productUnits = watch('itemProductId')?.value?.units || [];
+  const [ unitOptions, setUnitOptions ] = useState<Array<Option<Unit>>>();
+  const [ productOptions, setProductOptions ] = useState<Array<Option<Product>>>();
 
-  console.log(productUnits);
+  const selectedProduct = watch('itemProductId');
 
-  const toOption = <T extends { name: string }>(i: T): Option<T> => ({
-    label: i.name,
-    value: i,
-  });
-
-  const unitDropdownOptions: Array<Option<Unit>> = [ ...productUnits, ...units ].map((u) =>
-    toOption(u),
-  );
-  const productDropdownOptions: Array<Option<Product>> = products.map((u) =>
-    toOption(u),
-  );
-
-  const itemUnitId = unitDropdownOptions.find(
-    (o) => o.value.id === existingItem?.detail?.unitId,
-  );
-  const itemProductId = productDropdownOptions.find(
-    (o) => o.value.id === existingItem?.detail?.productId,
-  );
-
+  // This hook runs when the user changes the selected ingredient
   useEffect(() => {
 
-    const defaultValues: Partial<RecipeDetailFormFields> = {
-      itemUnitId,
-      itemQuantity: existingItem?.detail?.quantity,
-      itemText: existingItem?.detail?.itemText.toString(),
-      itemProductId,
-    };
+    const prodOpt = products.map((u) =>
+      toOption(u),
+    );
+        
+    setProductOptions(prodOpt);
 
-    reset(defaultValues);
-  }, [ existingItem, reset, itemProductId ]);
+    setValue('itemProductId', prodOpt.find(
+      (o) => o.value.id === existingItem?.detail?.productId,
+    ) || null);
+
+    setValue('itemText', existingItem?.detail?.itemText || '');
+    setValue('itemQuantity', existingItem?.detail?.quantity || '');
+
+  }, [ existingItem, products, setValue ]);
+
+  // update units when product changes
+  useEffect(() => {
+    const unitOpt= [
+      ...(selectedProduct?.value?.units || []),
+      ...units ].map(
+      (u) => toOption(u),
+    );
+    setUnitOptions(unitOpt);
+  }, [ selectedProduct, units ]);
+
+  // This hook runs when the user switches the selected product to update the units
+  // set unit list ->
+  useEffect(() => {
+    const val =  unitOptions?.find(
+      (o) => o.value.id === existingItem?.detail?.unitId,
+    ) || null;
+    setValue('itemUnitId', val);
+  }, [ unitOptions, setValue ]);
 
   const preSubmit = ({
     itemUnitId,
@@ -130,7 +145,7 @@ const RecipeDetailForm: React.FC<RecipeDetailFormProps> = ({
           defaultValue={''}
           name="itemProductId"
           control={control}
-          options={productDropdownOptions}
+          options={productOptions}
           as={CustomSelect}
           invalid={errors.itemProductId}
           rules={{ required: true }}
@@ -155,11 +170,10 @@ const RecipeDetailForm: React.FC<RecipeDetailFormProps> = ({
             />
 
             <Controller
-              defaultValue={''}
               className={'w-50 ml-3'}
               name="itemUnitId"
               control={control}
-              options={unitDropdownOptions}
+              options={unitOptions}
               as={CustomSelect}
               invalid={errors.itemUnitId}
               rules={{ required: true }}

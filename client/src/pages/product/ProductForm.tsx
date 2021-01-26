@@ -10,10 +10,16 @@ import {
   InputGroupAddon,
   InputGroupText,
   Label,
+  Row,
 } from 'reactstrap';
 import CustomSelect from '../../components/CustomSelect';
+import { useModal } from '../../components/functionalModal/useModal';
 import { ProductData } from '../../models/Product';
+import { Unit } from '../../models/Unit';
 import DensityCalculationModal from './DensityCalculationModal';
+import ProductUnitForm from './ProductUnitForm';
+import ProductUnitTable from './ProductUnitTable';
+import SimpleModal from './SimpleModal';
 
 interface productFormProps {
   onSubmit: (data: FieldValues) => void;
@@ -30,15 +36,23 @@ const ProductForm: React.FC<productFormProps> = ({
 }) => {
   const [ modal, setModal ] = useState<boolean>(false);
 
+  const [ specificUnits, setSpecificUnits ] = useState<Array<Unit>>(initialState?.units || []);
+
+  const fullUnits = [ ...units, ...specificUnits.map(u => ({
+    label: `${u.symbol} (${u.name})`,
+    value: u.id,
+  })) ];
+
   const { register, handleSubmit, errors, control, setValue } = useForm({
     defaultValues: {
       productName: initialState?.name,
       productPrice: initialState?.cost,
       productQuantity: initialState?.quantity,
-      productUnit: units.find((u) => u.value === initialState?.unitId),
+      productUnit: fullUnits.find((u) => u.value === initialState?.unitId),
       productBrand: initialState?.brand,
       productDescription: initialState?.description,
       productDensity: initialState?.density ? initialState.density : 1,
+      productUnits: initialState?.units,
     },
   });
 
@@ -48,6 +62,7 @@ const ProductForm: React.FC<productFormProps> = ({
         delete data[key];
       }
     });
+    data['productUnits'] = specificUnits;
     onSubmit(data);
   };
 
@@ -115,7 +130,7 @@ const ProductForm: React.FC<productFormProps> = ({
                 className={'w-75 ml-3'}
                 name="productUnit"
                 control={control}
-                options={units}
+                options={fullUnits}
                 as={CustomSelect}
                 invalid={errors.productUnit}
                 rules={{ required: true }}
@@ -181,6 +196,12 @@ const ProductForm: React.FC<productFormProps> = ({
             />
           </Col>
         </FormGroup>
+        <hr />
+        <Row>
+          <Col><h3>Units</h3></Col>
+        </Row>
+        
+        <ProductUnitTable specificUnits={specificUnits} setSpecificUnits={setSpecificUnits}/>
         <hr />
         <FormGroup>
           <Button type="submit" color={'primary'}>

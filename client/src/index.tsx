@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import { SnackbarProvider } from 'notistack';
 import Amplify from 'aws-amplify';
 import awsconfig from './aws-exports';
+import { ModalProvider } from './components/functionalModal/ModalProvider';
 
 Amplify.configure(awsconfig);
 
@@ -15,7 +16,9 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={Store}>
       <SnackbarProvider maxSnack={3}>
-        <App />
+        <ModalProvider>
+          <App />
+        </ModalProvider>
       </SnackbarProvider>
     </Provider>
   </React.StrictMode>,

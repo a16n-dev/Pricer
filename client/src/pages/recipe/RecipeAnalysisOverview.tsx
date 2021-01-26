@@ -153,7 +153,7 @@ const RecipeAnalysisOverview: React.FC<reduxStateProps<stateProps>> = ({
         </Row>
       ) : (
         <>
-          <Row Row className={'mb-3'}>
+          <Row className={'mb-3'}>
             <Col>
               <RecipeAnalysisBox
                 id={state.recipe.id}

@@ -37,6 +37,7 @@ const CreateProduct: React.FC<
      productBrand,
      productDescription,
      productDensity,
+     productUnits,
    }: FieldValues) => {
      const res = await dispatch(createProduct({
        name: productName,
@@ -46,7 +47,7 @@ const CreateProduct: React.FC<
        quantity: productQuantity,
        unitId: productUnit.value,
        density: productDensity,
-       units: [],
+       units: productUnits,
      }));
 
      if(createProduct.fulfilled.match(res)){

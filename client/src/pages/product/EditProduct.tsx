@@ -53,6 +53,7 @@ const EditProduct: React.FC<reduxStateProps<stateProps>> = ({state}) => {
     productBrand,
     productDescription,
     productDensity,
+    productUnits,
   }: FieldValues) => {
     const res = await dispatch(updateProduct({
       id: state.product.id,
@@ -64,7 +65,7 @@ const EditProduct: React.FC<reduxStateProps<stateProps>> = ({state}) => {
         quantity: productQuantity,
         unitId: productUnit.value,
         density: productDensity,
-        units: [],
+        units: productUnits,
       },
     }));
 
